@@ -1,1 +1,74 @@
-<p>sidebar works!</p>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
+    <mat-nav-list>
+      <div class="sidebar-header">
+        <mat-icon class="logo-icon">eco</mat-icon>
+        <h2 class="sidebar-title">Olive CRM</h2>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      
+      <a mat-list-item routerLink="/sales" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>point_of_sale</mat-icon>
+        <span matListItemTitle>Sales</span>
+      </a>
+      
+      <a mat-list-item routerLink="/barrels" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>storage</mat-icon>
+        <span matListItemTitle>Barrels</span>
+      </a>
+      
+      <a mat-list-item routerLink="/bottles" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>local_bar</mat-icon>
+        <span matListItemTitle>Bottles</span>
+      </a>
+      
+      <a mat-list-item routerLink="/reports" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>assessment</mat-icon>
+        <span matListItemTitle>Reports</span>
+      </a>
+      
+      <mat-divider></mat-divider>
+      
+      <h3 mat-subheader>Management</h3>
+      
+      <a mat-list-item routerLink="/inventory" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>inventory</mat-icon>
+        <span matListItemTitle>Inventory</span>
+      </a>
+      
+      <a mat-list-item routerLink="/customers" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Customers</span>
+      </a>
+      
+      <a mat-list-item routerLink="/suppliers" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>local_shipping</mat-icon>
+        <span matListItemTitle>Suppliers</span>
+      </a>
+      
+      <mat-divider></mat-divider>
+      
+      <h3 mat-subheader>Settings</h3>
+      
+      <a mat-list-item routerLink="/settings" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>Settings</span>
+      </a>
+      
+      <a mat-list-item routerLink="/help" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>help</mat-icon>
+        <span matListItemTitle>Help & Support</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
