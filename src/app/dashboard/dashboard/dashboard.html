@@ -39,34 +39,42 @@
   </div>
 
   <div class="dashboard-content">
-    <div class="recent-activities">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Recent Activities</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-list>
-            <mat-list-item>
-              <mat-icon matListItemIcon>check_circle</mat-icon>
-              <div matListItemTitle>New barrel added</div>
-              <div matListItemLine>Barrel #B2024-001 - 2 hours ago</div>
-            </mat-list-item>
-            <mat-divider></mat-divider>
-            <mat-list-item>
-              <mat-icon matListItemIcon>local_shipping</mat-icon>
-              <div matListItemTitle>Shipment completed</div>
-              <div matListItemLine>Order #ORD-2024-156 - 5 hours ago</div>
-            </mat-list-item>
-            <mat-divider></mat-divider>
-            <mat-list-item>
-              <mat-icon matListItemIcon>person_add</mat-icon>
-              <div matListItemTitle>New customer registered</div>
-              <div matListItemLine>John Doe - 1 day ago</div>
-            </mat-list-item>
-          </mat-list>
-        </mat-card-content>
-      </mat-card>
-    </div>
+    <mat-card class="activity-card">
+      <mat-card-header>
+        <mat-card-title>Recent Activity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="activity-list">
+          <div class="activity-item">
+            <mat-icon>check_circle</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Updated barrel inventory</span>
+              <span class="activity-time">2 hours ago</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="activity-item">
+            <mat-icon>add_circle</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Created new sales order</span>
+              <span class="activity-time">Yesterday</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="activity-item">
+            <mat-icon>assessment</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Generated monthly report</span>
+              <span class="activity-time">3 days ago</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
     <div class="quick-actions">
       <mat-card>

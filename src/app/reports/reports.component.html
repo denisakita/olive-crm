@@ -6,34 +6,32 @@
       Generate New Report
     </button>
   </div>
-  
+
   <div class="report-filters">
     <mat-chip-set>
       <mat-chip selected>All Reports</mat-chip>
       <mat-chip>Sales</mat-chip>
-      <mat-chip>Inventory</mat-chip>
-      <mat-chip>Customer</mat-chip>
-      <mat-chip>Production</mat-chip>
+      <mat-chip>Barrels</mat-chip>
     </mat-chip-set>
   </div>
-  
+
   <div class="reports-grid">
     <mat-card *ngFor="let report of reports" class="report-card">
       <mat-card-header>
-        <mat-card-title>{{report.title}}</mat-card-title>
+        <mat-card-title>{{ report.title }}</mat-card-title>
         <mat-chip [color]="report.status === 'Ready' ? 'primary' : 'accent'">
-          {{report.status}}
+          {{ report.status }}
         </mat-chip>
       </mat-card-header>
       <mat-card-content>
         <div class="report-meta">
           <span class="report-type">
             <mat-icon>folder</mat-icon>
-            {{report.type}}
+            {{ report.type }}
           </span>
           <span class="report-date">
             <mat-icon>calendar_today</mat-icon>
-            {{report.date | date:'MMM dd, yyyy'}}
+            {{ report.date | date:'MMM dd, yyyy' }}
           </span>
         </div>
       </mat-card-content>
@@ -53,7 +51,7 @@
       </div>
     </mat-card>
   </div>
-  
+
   <mat-card class="chart-section">
     <mat-card-header>
       <mat-card-title>Quick Analytics</mat-card-title>

@@ -29,7 +29,7 @@
     .stat-card {
       position: relative;
       overflow: hidden;
-      
+
       mat-card-content {
         position: relative;
         padding: 24px;
@@ -72,16 +72,42 @@
       grid-template-columns: 1fr;
     }
 
-    .recent-activities {
-      mat-card {
-        height: 100%;
-      }
+    .activity-card {
+      height: fit-content;
 
-      mat-list-item {
-        margin-bottom: 8px;
+      .activity-list {
+        .activity-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 12px 0;
 
-        mat-icon {
-          color: #4caf50;
+          mat-icon {
+            color: #4caf50;
+            flex-shrink: 0;
+          }
+
+          .activity-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .activity-title {
+              color: #333;
+              font-size: 14px;
+            }
+
+            .activity-time {
+              color: #999;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+          }
+        }
+
+        mat-divider {
+          margin: 0;
         }
       }
     }
@@ -108,4 +134,5 @@
       }
     }
   }
+
 }

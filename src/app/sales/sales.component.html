@@ -12,10 +12,11 @@
       <div class="filter-section">
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter()" placeholder="Search by customer, product, or ID">
+          <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter()"
+                 placeholder="Search by customer, product, or ID">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
-        
+
         <mat-form-field appearance="outline" class="status-field">
           <mat-label>Status</mat-label>
           <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilter()">
@@ -26,60 +27,60 @@
             <mat-option value="cancelled">Cancelled</mat-option>
           </mat-select>
         </mat-form-field>
-        
+
         <button mat-button color="warn" (click)="clearFilters()" [disabled]="!filterValue && !statusFilter">
           <mat-icon>clear</mat-icon>
           Clear Filters
         </button>
       </div>
-      
+
       <table mat-table [dataSource]="dataSource" matSort class="sales-table">
-        
+
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.id}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.id }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="customer">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.customer}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.customer }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="product">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Product </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.product}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Product</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.product }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="quantity">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.quantity}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.quantity }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.price | currency}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Price</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.price | currency }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-          <td mat-cell *matCellDef="let sale"> {{sale.date | date:'short'}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
+          <td mat-cell *matCellDef="let sale"> {{ sale.date | date:'short' }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
           <td mat-cell *matCellDef="let sale">
-            <span class="status-badge" 
-                  [class.completed]="sale.status === 'Completed'" 
+            <span class="status-badge"
+                  [class.completed]="sale.status === 'Completed'"
                   [class.pending]="sale.status === 'Pending'"
                   [class.processing]="sale.status === 'Processing'"
                   [class.cancelled]="sale.status === 'Cancelled'">
-              {{sale.status}}
+              {{ sale.status }}
             </span>
           </td>
         </ng-container>
-        
+
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <th mat-header-cell *matHeaderCellDef> Actions</th>
           <td mat-cell *matCellDef="let sale">
             <div class="action-buttons">
               <button mat-icon-button class="edit-button">
@@ -91,13 +92,13 @@
             </div>
           </td>
         </ng-container>
-        
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      
+
       <!-- Pagination -->
-      <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" 
+      <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]"
                      [pageSize]="10"
                      showFirstLastButtons
                      aria-label="Select page of sales">

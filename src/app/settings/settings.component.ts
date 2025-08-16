@@ -90,4 +90,13 @@ export class SettingsComponent {
   clearCache() {
     console.log('Clearing cache...');
   }
+  
+  saveAllSettings() {
+    console.log('Saving all settings...');
+    this.saveGeneralSettings();
+    this.saveNotificationSettings();
+    this.saveSecuritySettings();
+    this.saveDisplaySettings();
+    console.log('All settings saved successfully!');
+  }
 }
