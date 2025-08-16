@@ -25,25 +25,25 @@ export const routes: Routes = [
       },
       {
         path: 'sales',
-        loadChildren: () => import('./sales/sales.module').then(m => m.SalesModule)
+        loadChildren: () => import('./features/sales/sales.module').then(m => m.SalesModule)
       },
       {
         path: 'barrels',
-        loadChildren: () => import('./barrels/barrels.module').then(m => m.BarrelsModule)
+        loadChildren: () => import('./features/barrels/barrels.module').then(m => m.BarrelsModule)
       },
       {
         path: 'reports',
-        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
+        loadChildren: () => import('./features/reports/reports.module').then(m => m.ReportsModule),
         // canActivate: [AuthGuard],
         // data: { roles: [UserRole.ADMIN, UserRole.MANAGER] }
       },
       {
         path: 'profile',
-        loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+        loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)
       },
       {
         path: 'settings',
-        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+        loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule),
         // canActivate: [AuthGuard],
         // data: { roles: [UserRole.ADMIN] }
       }

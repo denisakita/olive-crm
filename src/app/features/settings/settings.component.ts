@@ -8,7 +8,7 @@ import {
   MatIconModule,
   MatDividerModule,
   MatExpansionModule
-} from '../shared/material.module';
+} from '../../shared/material.module';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -86,7 +86,7 @@ export class SettingsComponent {
   clearCache() {
     console.log('Clearing cache...');
   }
-  
+
   saveAllSettings() {
     console.log('Saving all settings...');
     this.saveGeneralSettings();
