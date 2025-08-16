@@ -1,25 +1,16 @@
 import { Component } from '@angular/core';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
-import {
-  MatDivider,
-  MatListItem,
-  MatListItemTitle,
-  MatListSubheaderCssMatStyler,
-  MatNavList
-} from '@angular/material/list';
-import {RouterLink, RouterLinkActive} from '@angular/router';
-import {MatIcon} from '@angular/material/icon';
-import {BooleanInput} from '@angular/cdk/coercion';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { MatDivider, MatListItem, MatNavList } from '@angular/material/list';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
     MatIcon,
     MatSidenavContent,
-    MatListItemTitle,
     RouterLinkActive,
     RouterLink,
-    MatListSubheaderCssMatStyler,
     MatListItem,
     MatSidenav,
     MatSidenavContainer,
@@ -30,7 +21,10 @@ import {BooleanInput} from '@angular/cdk/coercion';
   styleUrl: './sidebar.scss'
 })
 export class Sidebar {
-  isOpen: BooleanInput;
-
+  isOpen: boolean = true;
+  
+  toggle(): void {
+    this.isOpen = !this.isOpen;
+  }
 }
 

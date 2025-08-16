@@ -1,0 +1,104 @@
+<div class="bottles-container">
+  <div class="bottles-header">
+    <div>
+      <h1>Bottle Inventory</h1>
+      <p class="subtitle">Manage your bottled olive oil products</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Add New Product
+      </button>
+      <button mat-raised-button>
+        <mat-icon>file_download</mat-icon>
+        Export Inventory
+      </button>
+    </div>
+  </div>
+  
+  <div class="inventory-summary">
+    <mat-card class="summary-card">
+      <mat-icon color="primary">inventory_2</mat-icon>
+      <div>
+        <span class="summary-value">{{bottles.length}}</span>
+        <span class="summary-label">Products</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="summary-card">
+      <mat-icon style="color: #4caf50">local_bar</mat-icon>
+      <div>
+        <span class="summary-value">603</span>
+        <span class="summary-label">Total Bottles</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="summary-card">
+      <mat-icon color="accent">trending_up</mat-icon>
+      <div>
+        <span class="summary-value">$18,540</span>
+        <span class="summary-label">Inventory Value</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="summary-card">
+      <mat-icon color="warn">warning</mat-icon>
+      <div>
+        <span class="summary-value">2</span>
+        <span class="summary-label">Low Stock Items</span>
+      </div>
+    </mat-card>
+  </div>
+  
+  <div class="bottles-grid">
+    <mat-card *ngFor="let bottle of bottles" class="bottle-card">
+      <div class="bottle-image">
+        <mat-icon>local_bar</mat-icon>
+        <mat-chip [color]="getStockColor(bottle.stock)" class="stock-badge">
+          {{getStockStatus(bottle.stock)}}
+        </mat-chip>
+      </div>
+      
+      <mat-card-header>
+        <mat-card-title>{{bottle.name}}</mat-card-title>
+        <mat-card-subtitle>{{bottle.type}} · {{bottle.volume}}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p class="bottle-description">{{bottle.description}}</p>
+        
+        <div class="bottle-details">
+          <div class="detail-row">
+            <span class="label">SKU:</span>
+            <span class="value">{{bottle.sku}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Stock:</span>
+            <span class="value" [class.low-stock]="bottle.stock < 20">
+              {{bottle.stock}} bottles
+            </span>
+          </div>
+          <div class="detail-row price-row">
+            <span class="label">Price:</span>
+            <span class="price">{{bottle.price | currency}}</span>
+          </div>
+        </div>
+      </mat-card-content>
+      
+      <div class="bottle-actions">
+        <button mat-button color="primary">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-button>
+          <mat-icon>add_shopping_cart</mat-icon>
+          Order
+        </button>
+        <button mat-button>
+          <mat-icon>bar_chart</mat-icon>
+          Analytics
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.sales-container {
+  padding: 24px;
+  
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    
+    .add-button {
+      margin-left: auto;
+    }
+  }
+  
+  .sales-table {
+    width: 100%;
+    
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      
+      &.completed {
+        background-color: #4caf50;
+        color: white;
+      }
+      
+      &.pending {
+        background-color: #ff9800;
+        color: white;
+      }
+    }
+  }
+}

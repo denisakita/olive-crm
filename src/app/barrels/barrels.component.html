@@ -1,0 +1,104 @@
+<div class="barrels-container">
+  <div class="barrels-header">
+    <div>
+      <h1>Barrel Management</h1>
+      <p class="subtitle">Manage and track your olive oil barrels</p>
+    </div>
+    <button mat-fab color="primary" class="add-barrel-btn">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  
+  <div class="barrels-stats">
+    <mat-card class="stat-card">
+      <mat-icon color="primary">storage</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{barrels.length}}</span>
+        <span class="stat-label">Total Barrels</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-icon color="accent">local_drink</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">1,375L</span>
+        <span class="stat-label">Total Volume</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-icon color="warn">hourglass_empty</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">2</span>
+        <span class="stat-label">Aging</span>
+      </div>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-icon style="color: #4caf50">check_circle</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">1</span>
+        <span class="stat-label">Ready</span>
+      </div>
+    </mat-card>
+  </div>
+  
+  <div class="barrels-grid">
+    <mat-card *ngFor="let barrel of barrels" class="barrel-card">
+      <mat-card-header>
+        <mat-card-title>{{barrel.id}}</mat-card-title>
+        <mat-card-subtitle>{{barrel.type}} Barrel</mat-card-subtitle>
+        <mat-chip [color]="getStatusColor(barrel.status)" class="status-chip">
+          {{barrel.status}}
+        </mat-chip>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="barrel-info">
+          <div class="info-row">
+            <mat-icon>local_drink</mat-icon>
+            <span>{{barrel.product || 'Empty'}}</span>
+          </div>
+          
+          <div class="info-row">
+            <mat-icon>location_on</mat-icon>
+            <span>{{barrel.location}}</span>
+          </div>
+          
+          <div class="info-row">
+            <mat-icon>calendar_today</mat-icon>
+            <span>Added: {{barrel.dateAdded | date:'MMM dd, yyyy'}}</span>
+          </div>
+        </div>
+        
+        <div class="capacity-section">
+          <div class="capacity-header">
+            <span>Capacity</span>
+            <span>{{barrel.currentVolume}}L / {{barrel.capacity}}L</span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getFillPercentage(barrel)"
+            [color]="barrel.status === 'Empty' ? 'warn' : 'primary'">
+          </mat-progress-bar>
+          <span class="capacity-percentage">{{getFillPercentage(barrel) | percent:'1.0-0'}}</span>
+        </div>
+      </mat-card-content>
+      
+      <div class="barrel-actions">
+        <button mat-button color="primary">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+        <button mat-button>
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-button [disabled]="barrel.status !== 'Ready'">
+          <mat-icon>local_shipping</mat-icon>
+          Transfer
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>
