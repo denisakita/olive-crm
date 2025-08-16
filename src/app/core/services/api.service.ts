@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, retry, map, timeout } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, retry, timeout} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -26,6 +26,7 @@ export interface QueryParams {
   page_size?: number;
   search?: string;
   ordering?: string;
+
   [key: string]: any;
 }
 
@@ -36,7 +37,8 @@ export class ApiService {
   private baseUrl = environment.apiUrl;
   private apiVersion = environment.apiVersion;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   /**
    * Constructs the full API URL
@@ -70,7 +72,7 @@ export class ApiService {
    */
   private buildParams(params?: QueryParams): HttpParams {
     let httpParams = new HttpParams();
-    
+
     if (params) {
       Object.keys(params).forEach(key => {
         const value = params[key];
@@ -85,7 +87,7 @@ export class ApiService {
         }
       });
     }
-    
+
     return httpParams;
   }
 
@@ -94,7 +96,7 @@ export class ApiService {
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -116,9 +118,9 @@ export class ApiService {
         errorMessage = error.error?.message || error.message || errorMessage;
       }
     }
-    
+
     console.error('API Error:', errorMessage, error);
-    return throwError(() => ({ message: errorMessage, status: error.status, error: error.error }));
+    return throwError(() => ({message: errorMessage, status: error.status, error: error.error}));
   }
 
   /**
@@ -226,14 +228,14 @@ export class ApiService {
   upload<T>(endpoint: string, formData: FormData): Observable<T> {
     const url = this.getUrl(endpoint);
     let headers = new HttpHeaders();
-    
+
     // Add auth token but don't set Content-Type (let browser set it for multipart)
     const token = localStorage.getItem('access_token');
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
 
-    return this.http.post<T>(url, formData, { headers }).pipe(
+    return this.http.post<T>(url, formData, {headers}).pipe(
       timeout(environment.timeout * 2), // Double timeout for uploads
       catchError(this.handleError.bind(this))
     );

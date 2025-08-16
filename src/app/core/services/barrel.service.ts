@@ -1,15 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
-import { ApiService, PaginatedResponse, QueryParams } from './api.service';
-import {
-  Barrel,
-  BarrelTransaction,
-  MaintenanceRecord,
-  BarrelStatistics,
-  BottleCoverage
-} from '../../models/barrel.interface';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {ApiService, PaginatedResponse, QueryParams} from './api.service';
+import {Barrel, BarrelStatistics, BarrelTransaction, BottleCoverage} from '../../models/barrel.interface';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +21,8 @@ export class BarrelService {
   // Constants for calculations
   private readonly BOTTLE_SIZE = 0.75; // 750ml bottles in liters
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) {
+  }
 
   /**
    * Get all barrels with optional filters
@@ -50,7 +45,7 @@ export class BarrelService {
    * Get a single barrel by ID
    */
   getBarrel(id: string | number): Observable<Barrel> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.detail, { id });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.detail, {id});
     return this.api.get<Barrel>(endpoint);
   }
 
@@ -72,7 +67,7 @@ export class BarrelService {
    * Update an existing barrel
    */
   updateBarrel(id: string | number, barrel: Partial<Barrel>): Observable<Barrel> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.update, { id });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.update, {id});
     return this.api.put<Barrel>(endpoint, barrel).pipe(
       tap(updatedBarrel => {
         const currentBarrels = this.barrelsSubject.value;
@@ -90,7 +85,7 @@ export class BarrelService {
    * Partially update a barrel
    */
   patchBarrel(id: string | number, changes: Partial<Barrel>): Observable<Barrel> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.update, { id });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.update, {id});
     return this.api.patch<Barrel>(endpoint, changes).pipe(
       tap(updatedBarrel => {
         const currentBarrels = this.barrelsSubject.value;
@@ -108,7 +103,7 @@ export class BarrelService {
    * Delete a barrel
    */
   deleteBarrel(id: string | number): Observable<any> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.delete, { id });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.delete, {id});
     return this.api.delete(endpoint).pipe(
       tap(() => {
         const currentBarrels = this.barrelsSubject.value;
@@ -123,7 +118,7 @@ export class BarrelService {
    * Get barrel transactions (fill, empty, transfer, sample)
    */
   getBarrelTransactions(barrelId: string | number, params?: QueryParams): Observable<PaginatedResponse<BarrelTransaction>> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.transactions, { id: barrelId });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.transactions, {id: barrelId});
     return this.api.getPaginated<BarrelTransaction>(endpoint, params);
   }
 
@@ -131,7 +126,7 @@ export class BarrelService {
    * Add a barrel transaction
    */
   addBarrelTransaction(barrelId: string | number, transaction: Partial<BarrelTransaction>): Observable<BarrelTransaction> {
-    const endpoint = this.api.replaceParams(environment.endpoints.barrels.transactions, { id: barrelId });
+    const endpoint = this.api.replaceParams(environment.endpoints.barrels.transactions, {id: barrelId});
     return this.api.post<BarrelTransaction>(endpoint, transaction).pipe(
       tap(() => {
         // Refresh the barrel data after transaction
@@ -208,7 +203,7 @@ export class BarrelService {
         this.addBarrelTransaction(toBarrelId, toTransaction).subscribe(() => {
           this.getBarrel(fromBarrelId).subscribe(fromBarrel => {
             this.getBarrel(toBarrelId).subscribe(toBarrel => {
-              observer.next({ from: fromBarrel, to: toBarrel });
+              observer.next({from: fromBarrel, to: toBarrel});
               observer.complete();
             });
           });
@@ -221,7 +216,7 @@ export class BarrelService {
    * Get barrels by status
    */
   getBarrelsByStatus(status: 'empty' | 'partial' | 'full', params?: QueryParams): Observable<PaginatedResponse<Barrel>> {
-    const statusParams = { ...params, status };
+    const statusParams = {...params, status};
     return this.getBarrels(statusParams);
   }
 
@@ -297,7 +292,7 @@ export class BarrelService {
    */
   exportBarrels(format: 'csv' | 'excel' | 'pdf', params?: QueryParams): Observable<Blob> {
     const endpoint = `${environment.endpoints.barrels.base}export/`;
-    const exportParams = { ...params, format };
+    const exportParams = {...params, format};
     return this.api.download(endpoint, exportParams);
   }
 
@@ -307,7 +302,7 @@ export class BarrelService {
    */
   bulkUpdateStatus(barrelIds: (string | number)[], status: string): Observable<any> {
     const endpoint = `${environment.endpoints.barrels.base}bulk-update/`;
-    return this.api.post(endpoint, { ids: barrelIds, status });
+    return this.api.post(endpoint, {ids: barrelIds, status});
   }
 
   /**

@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { AuthGuard } from './core/guards/auth.guard';
+import { UserRole } from './models/auth.interface';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
+    // canActivate: [AuthGuard],
+    // canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
@@ -25,7 +29,9 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
-        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
+        // canActivate: [AuthGuard],
+        // data: { roles: [UserRole.ADMIN, UserRole.MANAGER] }
       },
       {
         path: 'profile',
@@ -33,12 +39,18 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+        // canActivate: [AuthGuard],
+        // data: { roles: [UserRole.ADMIN] }
       }
     ]
   },
   {
-    path: 'auth',
+    path: 'login',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'unauthorized',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
