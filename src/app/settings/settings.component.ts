@@ -1,0 +1,93 @@
+import {Component} from '@angular/core';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatDivider} from '@angular/material/divider';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import {FormsModule} from '@angular/forms';
+
+@Component({
+  selector: 'app-settings',
+  standalone: true,
+  imports: [
+    MatSlideToggle,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
+    MatButton,
+    MatIcon,
+    MatDivider,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    FormsModule
+  ],
+  templateUrl: './settings.component.html',
+  styleUrl: './settings.component.scss'
+})
+export class SettingsComponent {
+  // General Settings
+  generalSettings = {
+    language: 'en',
+    timezone: 'UTC-5',
+    dateFormat: 'MM/DD/YYYY',
+    currency: 'USD'
+  };
+
+  // Notification Settings
+  notifications = {
+    emailNotifications: true,
+    pushNotifications: false,
+    smsNotifications: false,
+    weeklyReports: true,
+    inventoryAlerts: true,
+    salesAlerts: true,
+    systemUpdates: false
+  };
+
+  // Security Settings
+  security = {
+    twoFactorAuth: false,
+    sessionTimeout: '30',
+    passwordExpiry: '90'
+  };
+
+  // Display Settings
+  display = {
+    theme: 'light',
+    compactView: false,
+    showSidebar: true,
+    itemsPerPage: '10'
+  };
+
+  saveGeneralSettings() {
+    console.log('Saving general settings:', this.generalSettings);
+  }
+
+  saveNotificationSettings() {
+    console.log('Saving notification settings:', this.notifications);
+  }
+
+  saveSecuritySettings() {
+    console.log('Saving security settings:', this.security);
+  }
+
+  saveDisplaySettings() {
+    console.log('Saving display settings:', this.display);
+  }
+
+  exportData() {
+    console.log('Exporting data...');
+  }
+
+  clearCache() {
+    console.log('Clearing cache...');
+  }
+}

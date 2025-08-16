@@ -1,0 +1,169 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>User Profile</h1>
+    <button mat-raised-button color="primary" (click)="toggleEdit()" *ngIf="!isEditing">
+      <mat-icon>edit</mat-icon>
+      Edit Profile
+    </button>
+  </div>
+  
+  <div class="profile-content">
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <div class="avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <mat-card-title>{{user.firstName}} {{user.lastName}}</mat-card-title>
+        <mat-card-subtitle>{{user.role}} - {{user.department}}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="profile-form" *ngIf="isEditing">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput [(ngModel)]="user.firstName">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput [(ngModel)]="user.lastName">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" [(ngModel)]="user.email">
+              <mat-icon matPrefix>email</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Phone</mat-label>
+              <input matInput [(ngModel)]="user.phone">
+              <mat-icon matPrefix>phone</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Department</mat-label>
+              <input matInput [(ngModel)]="user.department">
+              <mat-icon matPrefix>business</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput [(ngModel)]="user.location">
+              <mat-icon matPrefix>location_on</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Bio</mat-label>
+            <textarea matInput rows="4" [(ngModel)]="user.bio"></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+          </mat-form-field>
+          
+          <div class="form-actions">
+            <button mat-raised-button color="primary" (click)="saveProfile()">
+              <mat-icon>save</mat-icon>
+              Save Changes
+            </button>
+            <button mat-button (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
+        </div>
+        
+        <div class="profile-info" *ngIf="!isEditing">
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListItemIcon>email</mat-icon>
+              <div matListItemTitle>Email</div>
+              <div matListItemLine>{{user.email}}</div>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>phone</mat-icon>
+              <div matListItemTitle>Phone</div>
+              <div matListItemLine>{{user.phone}}</div>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>work</mat-icon>
+              <div matListItemTitle>Role</div>
+              <div matListItemLine>{{user.role}}</div>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>business</mat-icon>
+              <div matListItemTitle>Department</div>
+              <div matListItemLine>{{user.department}}</div>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>location_on</mat-icon>
+              <div matListItemTitle>Location</div>
+              <div matListItemLine>{{user.location}}</div>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>calendar_today</mat-icon>
+              <div matListItemTitle>Join Date</div>
+              <div matListItemLine>{{user.joinDate | date:'longDate'}}</div>
+            </mat-list-item>
+          </mat-list>
+          
+          <div class="bio-section">
+            <h3>About</h3>
+            <p>{{user.bio}}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="activity-card">
+      <mat-card-header>
+        <mat-card-title>Recent Activity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListItemIcon>check_circle</mat-icon>
+            <div matListItemTitle>Updated barrel inventory</div>
+            <div matListItemLine>2 hours ago</div>
+          </mat-list-item>
+          
+          <mat-divider></mat-divider>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon>add_circle</mat-icon>
+            <div matListItemTitle>Created new sales order</div>
+            <div matListItemLine>Yesterday</div>
+          </mat-list-item>
+          
+          <mat-divider></mat-divider>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon>assessment</mat-icon>
+            <div matListItemTitle>Generated monthly report</div>
+            <div matListItemLine>3 days ago</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

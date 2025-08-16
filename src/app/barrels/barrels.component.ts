@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
-import { MatButton, MatFabButton } from '@angular/material/button';
+import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatChip } from '@angular/material/chips';
 import { MatProgressBar } from '@angular/material/progress-bar';
@@ -121,29 +121,29 @@ export class BarrelsComponent {
   getFillPercentage(barrel: Barrel): number {
     return (barrel.currentVolume / barrel.capacity) * 100;
   }
-  
+
   getBottlesFilled(barrel: Barrel): number {
     // Calculate how many 750ml bottles can be filled from current volume
     return Math.floor(barrel.currentVolume / 0.75);
   }
-  
+
   getTotalBottleCapacity(barrel: Barrel): number {
     // Calculate total bottle capacity from full barrel
     return Math.floor(barrel.capacity / 0.75);
   }
-  
+
   getTotalLiters(): number {
     return this.barrels.reduce((sum, barrel) => sum + barrel.currentVolume, 0);
   }
-  
+
   getFullBarrels(): number {
     return this.barrels.filter(b => b.status === 'Full').length;
   }
-  
+
   getPartialBarrels(): number {
     return this.barrels.filter(b => b.status === 'Partial').length;
   }
-  
+
   getEmptyBarrels(): number {
     return this.barrels.filter(b => b.status === 'Empty').length;
   }
