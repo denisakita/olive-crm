@@ -1,0 +1,278 @@
+.profile-container {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  background-color: var(--background-primary);
+
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .subtitle {
+      margin: 8px 0 0 0;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+  }
+
+  .profile-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-card {
+      .profile-card-header {
+        display: flex;
+        gap: 32px;
+        padding: 32px;
+        background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
+        color: white;
+        border-radius: 8px 8px 0 0;
+
+        .avatar-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+
+          .avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            mat-icon {
+              font-size: 80px;
+              width: 80px;
+              height: 80px;
+              color: var(--dark-moss-green);
+            }
+          }
+
+          .avatar-change-btn {
+            color: white;
+
+            mat-icon {
+              margin-right: 4px;
+            }
+          }
+        }
+
+        .header-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          h2 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 500;
+          }
+
+          .role-info {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            opacity: 0.95;
+          }
+
+          .contact-badges {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+
+            .badge {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              background: rgba(255, 255, 255, 0.2);
+              padding: 8px 16px;
+              border-radius: 20px;
+              font-size: 14px;
+
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+        }
+      }
+
+      .profile-form {
+        margin-top: 24px;
+
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+
+          @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .full-width {
+          width: 100%;
+          margin-bottom: 16px;
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 12px;
+          margin-top: 24px;
+
+          button {
+            mat-icon {
+              margin-right: 4px;
+            }
+          }
+        }
+      }
+
+      .profile-info {
+        padding: 24px;
+
+        .info-section {
+          margin-bottom: 24px;
+
+          .section-title {
+            margin: 0 0 20px 0;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+
+            &:before {
+              content: '';
+              width: 4px;
+              height: 20px;
+              background: var(--dark-moss-green);
+              margin-right: 12px;
+              border-radius: 2px;
+            }
+          }
+
+          .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+
+            @media (max-width: 768px) {
+              grid-template-columns: 1fr;
+            }
+
+            .info-item {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .info-label {
+                font-size: 12px;
+                color: var(--moss-green);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+
+              .info-value {
+                font-size: 16px;
+                color: var(--text-primary);
+                font-weight: 500;
+              }
+            }
+          }
+        }
+
+        mat-divider {
+          margin: 24px 0;
+        }
+
+        .bio-section {
+          .section-title {
+            margin: 0 0 16px 0;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+
+            &:before {
+              content: '';
+              width: 4px;
+              height: 20px;
+              background: var(--dark-moss-green);
+              margin-right: 12px;
+              border-radius: 2px;
+            }
+          }
+
+          p {
+            margin: 0;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+
+    .activity-card {
+      height: fit-content;
+
+      .activity-list {
+        .activity-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 12px 0;
+
+          mat-icon {
+            color: var(--success);
+            flex-shrink: 0;
+          }
+
+          .activity-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .activity-title {
+              color: var(--text-primary);
+              font-size: 14px;
+            }
+
+            .activity-time {
+              color: #999;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+          }
+        }
+
+        mat-divider {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

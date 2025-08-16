@@ -1,0 +1,203 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+/* Global Color Palette */
+:root {
+  /* Primary Colors - Olive Theme */
+  --dark-moss-green: #606c38ff;
+  --pakistan-green: #283618ff;
+  --moss-green: #93987cff;
+  --cornsilk: #fefae0ff;
+  --sunset: #eece9fff;
+  --earth-yellow: #dda15eff;
+  --tigers-eye: #bc6c25ff;
+
+  /* Additional utility colors */
+  --text-primary: var(--pakistan-green);
+  --text-secondary: var(--dark-moss-green);
+  --background-primary: var(--cornsilk);
+  --background-secondary: #ffffff;
+  --accent: var(--earth-yellow);
+  --warn: var(--tigers-eye);
+  --success: var(--dark-moss-green);
+  --info: var(--moss-green);
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(40, 54, 24, 0.1);
+}
+
+/* Define Material Design 3 theme */
+$olive-primary: (
+  50: #f0f4e8,
+  100: #d9e2c6,
+  200: #c0cea0,
+  300: #a6ba7a,
+  400: #93ac5e,
+  500: #606c38,
+  600: #576232,
+  700: #4c552b,
+  800: #424924,
+  900: #283618,
+  A100: #c5ff7f,
+  A200: #a8ff4c,
+  A400: #8bff19,
+  A700: #7dff00,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  )
+);
+
+$olive-accent: (
+  50: #fdf8f2,
+  100: #faeede,
+  200: #f6e3c8,
+  300: #f2d7b1,
+  400: #efcfa0,
+  500: #dda15e,
+  600: #d49655,
+  700: #c8894b,
+  800: #bd7c41,
+  900: #ac6630,
+  A100: #fff3e0,
+  A200: #ffe0b2,
+  A400: #ffcc80,
+  A700: #ffb74d,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  )
+);
+
+$olive-warn: (
+  50: #f8ede7,
+  100: #edd1c3,
+  200: #e2b39b,
+  300: #d69473,
+  400: #cd7d55,
+  500: #bc6c25,
+  600: #b06221,
+  700: #9f551c,
+  800: #8f4917,
+  900: #71350e,
+  A100: #ffc4a3,
+  A200: #ff9e70,
+  A400: #ff783d,
+  A700: #ff6524,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  )
+);
+
+$olive-primary-palette: mat.m2-define-palette($olive-primary, 500, 300, 700);
+$olive-accent-palette: mat.m2-define-palette($olive-accent, 500, 300, 700);
+$olive-warn-palette: mat.m2-define-palette($olive-warn, 500, 300, 700);
+
+$olive-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $olive-primary-palette,
+    accent: $olive-accent-palette,
+    warn: $olive-warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+@include mat.all-component-themes($olive-theme);
+
+html, body { 
+  height: 100%; 
+  background-color: var(--background-primary);
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: var(--text-primary);
+}
+
+/* Global utility classes */
+.bg-primary { background-color: var(--dark-moss-green) !important; }
+.bg-secondary { background-color: var(--pakistan-green) !important; }
+.bg-accent { background-color: var(--earth-yellow) !important; }
+.bg-light { background-color: var(--cornsilk) !important; }
+.bg-moss { background-color: var(--moss-green) !important; }
+.bg-sunset { background-color: var(--sunset) !important; }
+.bg-warn { background-color: var(--tigers-eye) !important; }
+
+.text-primary { color: var(--dark-moss-green) !important; }
+.text-secondary { color: var(--pakistan-green) !important; }
+.text-accent { color: var(--earth-yellow) !important; }
+.text-light { color: var(--cornsilk) !important; }
+.text-moss { color: var(--moss-green) !important; }
+.text-sunset { color: var(--sunset) !important; }
+.text-warn { color: var(--tigers-eye) !important; }
+
+/* Override Material default colors */
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--dark-moss-green) !important;
+}
+
+.mat-mdc-raised-button.mat-accent {
+  background-color: var(--earth-yellow) !important;
+}
+
+.mat-mdc-raised-button.mat-warn {
+  background-color: var(--tigers-eye) !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--moss-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-moss-green);
+}
+

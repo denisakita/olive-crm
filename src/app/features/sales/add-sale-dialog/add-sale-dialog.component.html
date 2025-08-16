@@ -1,0 +1,132 @@
+<h2 mat-dialog-title>
+  <mat-icon>add_shopping_cart</mat-icon>
+  Add New Sale
+</h2>
+
+<mat-dialog-content>
+  <div class="dialog-form">
+    <div class="form-section">
+      <h3>Customer Information</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Customer Name</mat-label>
+          <input matInput [(ngModel)]="sale.customerName" placeholder="Enter customer name" required>
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="form-section">
+      <h3>Product Details</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Product</mat-label>
+          <mat-select [(ngModel)]="sale.product" required>
+            <mat-option *ngFor="let product of products" [value]="product">
+              {{product}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>inventory_2</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" [(ngModel)]="sale.quantity" (ngModelChange)="calculateTotal()" min="1" required>
+          <mat-icon matPrefix>numbers</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Unit Price</mat-label>
+          <input matInput type="number" [(ngModel)]="sale.price" (ngModelChange)="calculateTotal()" min="0" step="0.01" required>
+          <mat-icon matPrefix>attach_money</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Discount (%)</mat-label>
+          <input matInput type="number" [(ngModel)]="sale.discount" (ngModelChange)="calculateTotal()" min="0" max="100">
+          <mat-icon matPrefix>discount</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tax (%)</mat-label>
+          <input matInput type="number" [(ngModel)]="sale.tax" (ngModelChange)="calculateTotal()" min="0">
+          <mat-icon matPrefix>receipt</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="form-section">
+      <h3>Order Information</h3>
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Order Date</mat-label>
+          <input matInput [matDatepicker]="orderDatePicker" [(ngModel)]="sale.orderDate" required>
+          <mat-datepicker-toggle matSuffix [for]="orderDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #orderDatePicker></mat-datepicker>
+          <mat-icon matPrefix>event</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Delivery Date</mat-label>
+          <input matInput [matDatepicker]="deliveryDatePicker" [(ngModel)]="sale.deliveryDate">
+          <mat-datepicker-toggle matSuffix [for]="deliveryDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #deliveryDatePicker></mat-datepicker>
+          <mat-icon matPrefix>local_shipping</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Payment Method</mat-label>
+          <mat-select [(ngModel)]="sale.paymentMethod">
+            <mat-option *ngFor="let method of paymentMethods" [value]="method.value">
+              {{method.label}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>payment</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="sale.status">
+            <mat-option *ngFor="let status of statuses" [value]="status.value">
+              {{status.label}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>flag</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes</mat-label>
+          <textarea matInput [(ngModel)]="sale.notes" rows="3" placeholder="Additional notes..."></textarea>
+          <mat-icon matPrefix>note</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="total-section">
+      <div class="total-display">
+        <span class="total-label">Total Amount:</span>
+        <span class="total-value">${{sale.total?.toFixed(2) || '0.00'}}</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isFormValid()">
+    <mat-icon>save</mat-icon>
+    Save Sale
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,251 @@
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>Settings</h1>
+    <p class="subtitle">Manage your application preferences and configuration</p>
+  </div>
+
+  <div class="settings-content">
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+
+        <mat-icon>settings</mat-icon>
+        General Settings
+
+        Language, timezone, and regional preferences
+
+      </mat-expansion-panel-header>
+
+      <div class="settings-section">
+        <div class="settings-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Language</mat-label>
+            <mat-select [(ngModel)]="generalSettings.language">
+              <mat-option value="en">English</mat-option>
+              <mat-option value="es">Spanish</mat-option>
+              <mat-option value="fr">French</mat-option>
+              <mat-option value="de">German</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Timezone</mat-label>
+            <mat-select [(ngModel)]="generalSettings.timezone">
+              <mat-option value="UTC-8">Pacific Time (UTC-8)</mat-option>
+              <mat-option value="UTC-5">Eastern Time (UTC-5)</mat-option>
+              <mat-option value="UTC+0">UTC</mat-option>
+              <mat-option value="UTC+1">Central European Time (UTC+1)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="settings-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date Format</mat-label>
+            <mat-select [(ngModel)]="generalSettings.dateFormat">
+              <mat-option value="MM/DD/YYYY">MM/DD/YYYY</mat-option>
+              <mat-option value="DD/MM/YYYY">DD/MM/YYYY</mat-option>
+              <mat-option value="YYYY-MM-DD">YYYY-MM-DD</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Currency</mat-label>
+            <mat-select [(ngModel)]="generalSettings.currency">
+              <mat-option value="USD">USD ($)</mat-option>
+              <mat-option value="EUR">EUR (€)</mat-option>
+              <mat-option value="GBP">GBP (£)</mat-option>
+              <mat-option value="JPY">JPY (¥)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="saveGeneralSettings()">
+          <mat-icon>save</mat-icon>
+          Save General Settings
+        </button>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-icon>notifications</mat-icon>
+        Notifications
+        Configure your notification preferences
+      </mat-expansion-panel-header>
+
+      <div class="settings-section">
+        <div class="toggle-group">
+          <mat-slide-toggle [(ngModel)]="notifications.emailNotifications">
+            Email Notifications
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="notifications.pushNotifications">
+            Push Notifications
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="notifications.smsNotifications">
+            SMS Notifications
+          </mat-slide-toggle>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3>Alert Types</h3>
+        <div class="toggle-group">
+          <mat-slide-toggle [(ngModel)]="notifications.weeklyReports">
+            Weekly Reports
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="notifications.inventoryAlerts">
+            Inventory Alerts
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="notifications.salesAlerts">
+            Sales Alerts
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="notifications.systemUpdates">
+            System Updates
+          </mat-slide-toggle>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="saveNotificationSettings()">
+          <mat-icon>save</mat-icon>
+          Save Notification Settings
+        </button>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+
+        <mat-icon>security</mat-icon>
+        Security
+
+      </mat-expansion-panel-header>
+
+      <div class="settings-section">
+        <mat-slide-toggle [(ngModel)]="security.twoFactorAuth">
+          Two-Factor Authentication
+        </mat-slide-toggle>
+
+        <div class="settings-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Session Timeout (minutes)</mat-label>
+            <mat-select [(ngModel)]="security.sessionTimeout">
+              <mat-option value="15">15 minutes</mat-option>
+              <mat-option value="30">30 minutes</mat-option>
+              <mat-option value="60">1 hour</mat-option>
+              <mat-option value="120">2 hours</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password Expiry (days)</mat-label>
+            <mat-select [(ngModel)]="security.passwordExpiry">
+              <mat-option value="30">30 days</mat-option>
+              <mat-option value="60">60 days</mat-option>
+              <mat-option value="90">90 days</mat-option>
+              <mat-option value="never">Never</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="saveSecuritySettings()">
+          <mat-icon>save</mat-icon>
+          Save Security Settings
+        </button>
+
+        <button mat-raised-button color="warn" class="change-password-btn">
+          <mat-icon>lock</mat-icon>
+          Change Password
+        </button>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+
+        <mat-icon>palette</mat-icon>
+        Display & Appearance
+
+      </mat-expansion-panel-header>
+
+      <div class="settings-section">
+        <mat-form-field appearance="outline">
+          <mat-label>Theme</mat-label>
+          <mat-select [(ngModel)]="display.theme">
+            <mat-option value="light">Light</mat-option>
+            <mat-option value="dark">Dark</mat-option>
+            <mat-option value="auto">Auto (System)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="toggle-group">
+          <mat-slide-toggle [(ngModel)]="display.compactView">
+            Compact View
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="display.showSidebar">
+            Show Sidebar by Default
+          </mat-slide-toggle>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Items Per Page</mat-label>
+          <mat-select [(ngModel)]="display.itemsPerPage">
+            <mat-option value="10">10</mat-option>
+            <mat-option value="25">25</mat-option>
+            <mat-option value="50">50</mat-option>
+            <mat-option value="100">100</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="saveDisplaySettings()">
+          <mat-icon>save</mat-icon>
+          Save Display Settings
+        </button>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-icon>storage</mat-icon>
+        Data & Storage
+      </mat-expansion-panel-header>
+
+      <div class="settings-section">
+        <div class="data-actions">
+          <button mat-raised-button (click)="exportData()">
+            <mat-icon>cloud_download</mat-icon>
+            Export Data
+          </button>
+
+          <button mat-raised-button>
+            <mat-icon>cloud_upload</mat-icon>
+            Import Data
+          </button>
+
+          <button mat-raised-button>
+            <mat-icon>backup</mat-icon>
+            Backup Settings
+          </button>
+
+          <button mat-raised-button color="warn" (click)="clearCache()">
+            <mat-icon>delete_sweep</mat-icon>
+            Clear Cache
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="storage-info">
+          <p><strong>Storage Used:</strong> 245 MB / 1 GB</p>
+          <p><strong>Last Backup:</strong> January 15, 2024</p>
+          <p><strong>Database Size:</strong> 128 MB</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+
+</div>

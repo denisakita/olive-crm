@@ -1,0 +1,147 @@
+::ng-deep .mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    min-width: 600px;
+    max-width: 800px;
+  }
+}
+
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 24px 24px 16px;
+  font-size: 24px;
+  
+  mat-icon {
+    color: var(--dark-moss-green);
+  }
+}
+
+mat-dialog-content {
+  padding: 0 24px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+  
+  .dialog-form {
+    .form-section {
+      margin: 24px 0;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+      
+      h3 {
+        margin: 0 0 16px 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      
+      .form-row {
+        margin-bottom: 16px;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        &.two-columns {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          
+          @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+          }
+        }
+        
+        .full-width {
+          width: 100%;
+        }
+        
+        mat-form-field {
+          width: 100%;
+        }
+      }
+    }
+    
+    mat-divider {
+      margin: 24px 0;
+    }
+    
+    .total-section {
+      margin-top: 24px;
+      
+      .total-card {
+        background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
+        color: white;
+        
+        .calculation-breakdown {
+          padding: 16px;
+          
+          .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            
+            .calc-label {
+              font-size: 14px;
+              opacity: 0.9;
+            }
+            
+            .calc-value {
+              font-size: 16px;
+              font-weight: 500;
+              
+              &.discount {
+                color: var(--sunset);
+              }
+            }
+          }
+          
+          mat-divider {
+            margin: 16px 0;
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+          
+          .total-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            
+            .total-label {
+              font-size: 18px;
+              font-weight: 600;
+            }
+            
+            .total-value {
+              font-size: 32px;
+              font-weight: bold;
+              color: var(--cornsilk);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+  
+  button {
+    margin-left: 8px;
+    
+    mat-icon {
+      margin-right: 4px;
+    }
+    
+    &.mat-mdc-raised-button.mat-primary {
+      background-color: var(--dark-moss-green);
+      color: white;
+    }
+  }
+}

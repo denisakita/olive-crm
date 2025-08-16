@@ -1,0 +1,7 @@
+<div class="main-layout">
+  <app-header (sidebarToggle)="sidebar.toggle()"></app-header>
+
+  <app-sidebar #sidebar>
+    <router-outlet></router-outlet>
+  </app-sidebar>
+</div>

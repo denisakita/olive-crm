@@ -1,0 +1,76 @@
+<div class="reports-container">
+  <div class="reports-header">
+    <h1>Reports & Analytics</h1>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Generate New Report
+    </button>
+  </div>
+
+  <div class="report-filters">
+    <mat-chip-set>
+      <mat-chip selected>All Reports</mat-chip>
+      <mat-chip>Sales</mat-chip>
+      <mat-chip>Barrels</mat-chip>
+    </mat-chip-set>
+  </div>
+
+  <div class="reports-grid">
+    <mat-card *ngFor="let report of reports" class="report-card">
+      <mat-card-header>
+        <mat-card-title>{{ report.title }}</mat-card-title>
+        <mat-chip [color]="report.status === 'Ready' ? 'primary' : 'accent'">
+          {{ report.status }}
+        </mat-chip>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="report-meta">
+          <span class="report-type">
+            <mat-icon>folder</mat-icon>
+            {{ report.type }}
+          </span>
+          <span class="report-date">
+            <mat-icon>calendar_today</mat-icon>
+            {{ report.date | date:'MMM dd, yyyy' }}
+          </span>
+        </div>
+      </mat-card-content>
+      <div class="report-actions">
+        <button mat-button color="primary">
+          <mat-icon>visibility</mat-icon>
+          View
+        </button>
+        <button mat-button>
+          <mat-icon>download</mat-icon>
+          Download
+        </button>
+        <button mat-button>
+          <mat-icon>share</mat-icon>
+          Share
+        </button>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="chart-section">
+    <mat-card-header>
+      <mat-card-title>Quick Analytics</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="charts-grid">
+        <div class="chart-placeholder">
+          <mat-icon>bar_chart</mat-icon>
+          <p>Sales Trend</p>
+        </div>
+        <div class="chart-placeholder">
+          <mat-icon>pie_chart</mat-icon>
+          <p>Product Distribution</p>
+        </div>
+        <div class="chart-placeholder">
+          <mat-icon>show_chart</mat-icon>
+          <p>Revenue Growth</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

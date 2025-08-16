@@ -1,0 +1,74 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
+    <mat-nav-list>
+      <div class="sidebar-header">
+        <mat-icon class="logo-icon">eco</mat-icon>
+        <h2 class="sidebar-title">Olive CRM</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+
+      <a mat-list-item routerLink="/sales" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>point_of_sale</mat-icon>
+        <span>Sales</span>
+      </a>
+
+      <a mat-list-item routerLink="/barrels" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>storage</mat-icon>
+        <span>Barrels</span>
+      </a>
+
+      <a mat-list-item routerLink="/reports" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>assessment</mat-icon>
+        <span>Reports</span>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <h3 class="section-header">Management</h3>
+
+      <a mat-list-item routerLink="/inventory" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>inventory</mat-icon>
+        <span>Inventory</span>
+      </a>
+
+      <a mat-list-item routerLink="/customers" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>people</mat-icon>
+        <span>Customers</span>
+      </a>
+
+      <a mat-list-item routerLink="/suppliers" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>local_shipping</mat-icon>
+        <span>Suppliers</span>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <h3 class="section-header">Settings</h3>
+
+      <a mat-list-item routerLink="/profile" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>account_circle</mat-icon>
+        <span>Profile</span>
+      </a>
+
+      <a mat-list-item routerLink="/settings" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </a>
+
+      <a mat-list-item routerLink="/help" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>help</mat-icon>
+        <span>Help & Support</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

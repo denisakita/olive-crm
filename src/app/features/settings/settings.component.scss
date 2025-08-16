@@ -1,0 +1,191 @@
+.settings-container {
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+  // Hide scrollbar but keep functionality
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--background-primary);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--moss-green);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-moss-green);
+  }
+
+  .settings-header {
+    margin-bottom: 32px;
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 500;
+    }
+
+    .subtitle {
+      margin: 8px 0 0 0;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+  }
+
+  .settings-content {
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 24px; // Reduced padding at bottom
+
+    mat-expansion-panel {
+      margin-bottom: 16px;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      width: 100%;
+      box-sizing: border-box;
+
+      &:last-child {
+        margin-bottom: 0; // Remove margin from last panel
+      }
+
+      mat-expansion-panel-header {
+        font-size: 16px;
+        font-weight: 500;
+
+        mat-icon {
+          margin-right: 12px;
+          color: var(--dark-moss-green);
+          vertical-align: middle;
+        }
+      }
+
+      .settings-section {
+        padding: 24px;
+
+        h3 {
+          margin: 24px 0 16px 0;
+          font-size: 16px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .settings-row {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+
+          mat-form-field {
+            flex: 1;
+            min-width: 250px;
+            width: calc(50% - 8px);
+
+            @media (max-width: 768px) {
+              width: 100%;
+            }
+          }
+        }
+
+        // Standalone form field (not in .settings-row)
+        > mat-form-field {
+          display: block;
+          width: 100%;
+          max-width: 400px;
+        }
+
+        mat-slide-toggle {
+          display: block;
+          margin-bottom: 16px;
+          font-size: 14px;
+        }
+
+        .toggle-group {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin: 24px 0;
+
+          mat-slide-toggle {
+            display: block;
+            font-size: 14px;
+            margin: 0;
+          }
+        }
+
+        button {
+          margin-right: 12px;
+          margin-top: 12px;
+          display: inline-flex;
+          align-items: center;
+
+          mat-icon {
+            margin-right: 4px;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+
+          &.change-password-btn {
+            margin-left: 12px;
+          }
+        }
+
+        mat-divider {
+          margin: 24px 0;
+        }
+
+        .data-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          width: 100%;
+
+          button {
+            margin: 0;
+            height: 48px;
+            flex: 1;
+            min-width: 150px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+
+            mat-icon {
+              margin-right: 8px;
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+
+        .storage-info {
+          margin-top: 24px;
+          padding: 16px;
+          background-color: var(--cornsilk);
+          border-radius: 8px;
+
+          p {
+            margin: 8px 0;
+            color: var(--text-secondary);
+
+            strong {
+              color: var(--text-primary);
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

@@ -1,0 +1,101 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p class="dashboard-subtitle">Welcome to Olive CRM</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">1,234</div>
+        <div class="stat-label">Total Sales</div>
+        <mat-icon class="stat-icon">trending_up</mat-icon>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">567</div>
+        <div class="stat-label">Active Barrels</div>
+        <mat-icon class="stat-icon">storage</mat-icon>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">89</div>
+        <div class="stat-label">Bottles in Stock</div>
+        <mat-icon class="stat-icon">local_bar</mat-icon>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">45</div>
+        <div class="stat-label">Reports</div>
+        <mat-icon class="stat-icon">assessment</mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="dashboard-content">
+    <mat-card class="activity-card">
+      <mat-card-header>
+        <mat-card-title>Recent Activity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="activity-list">
+          <div class="activity-item">
+            <mat-icon>check_circle</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Updated barrel inventory</span>
+              <span class="activity-time">2 hours ago</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="activity-item">
+            <mat-icon>add_circle</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Created new sales order</span>
+              <span class="activity-time">Yesterday</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="activity-item">
+            <mat-icon>assessment</mat-icon>
+            <div class="activity-text">
+              <span class="activity-title">Generated monthly report</span>
+              <span class="activity-time">3 days ago</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="quick-actions">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Quick Actions</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <button mat-raised-button color="primary" class="action-button">
+            <mat-icon>add</mat-icon>
+            Add New Barrel
+          </button>
+          <button mat-raised-button color="accent" class="action-button">
+            <mat-icon>inventory</mat-icon>
+            Add New Sale
+          </button>
+          <button mat-raised-button class="action-button">
+            <mat-icon>bar_chart</mat-icon>
+            Generate Report
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

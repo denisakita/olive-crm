@@ -1,0 +1,109 @@
+.reports-container {
+  padding: 24px;
+
+  .reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 500;
+    }
+  }
+
+  .report-filters {
+    margin-bottom: 24px;
+
+    mat-chip {
+      cursor: pointer;
+    }
+  }
+
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+
+    .report-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 20px var(--shadow-color);
+      }
+
+      mat-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .report-meta {
+        display: flex;
+        gap: 16px;
+        margin-top: 12px;
+        color: var(--text-secondary);
+        font-size: 14px;
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+
+      .report-actions {
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 16px;
+        margin: 0 -16px -16px;
+        background-color: var(--cornsilk);
+        overflow: hidden;
+      }
+    }
+  }
+
+  .chart-section {
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
+
+      .chart-placeholder {
+        height: 200px;
+        background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+
+        mat-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          margin-bottom: 8px;
+        }
+
+        p {
+          margin: 0;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

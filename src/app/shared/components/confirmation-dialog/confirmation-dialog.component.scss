@@ -1,0 +1,168 @@
+::ng-deep .mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    min-width: 400px;
+    max-width: 500px;
+  }
+}
+
+.confirmation-dialog {
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 24px 0;
+    
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      
+      &.delete-icon {
+        color: #f44336;
+      }
+      
+      &.warning-icon {
+        color: #ff9800;
+      }
+      
+      &.info-icon {
+        color: #2196f3;
+      }
+      
+      &.confirm-icon {
+        color: #4caf50;
+      }
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+      color: #333;
+    }
+  }
+  
+  mat-dialog-content {
+    padding: 24px;
+    
+    .dialog-message {
+      .main-message {
+        margin: 0 0 16px 0;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+      }
+      
+      .item-name {
+        background: #f5f5f5;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+        border-left: 4px solid #3f51b5;
+        
+        strong {
+          color: #333;
+          font-size: 15px;
+        }
+      }
+      
+      .details-list {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0;
+        
+        li {
+          display: flex;
+          align-items: center;
+          padding: 8px 0;
+          color: #666;
+          font-size: 14px;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            color: #999;
+          }
+        }
+      }
+      
+      .warning-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff3e0;
+        border: 1px solid #ffcc80;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 16px;
+        
+        mat-icon {
+          color: #ff9800;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+        
+        span {
+          color: #e65100;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  mat-dialog-actions {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #e0e0e0;
+    
+    .cancel-button {
+      min-width: 90px;
+    }
+    
+    .confirm-button {
+      min-width: 120px;
+      
+      mat-icon {
+        margin-right: 4px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  ::ng-deep .mat-mdc-dialog-container {
+    .mdc-dialog__surface {
+      min-width: 280px;
+      margin: 16px;
+    }
+  }
+  
+  .confirmation-dialog {
+    .dialog-header {
+      flex-direction: column;
+      text-align: center;
+      
+      mat-icon {
+        margin: 0 auto;
+      }
+    }
+    
+    mat-dialog-actions {
+      flex-direction: column-reverse;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

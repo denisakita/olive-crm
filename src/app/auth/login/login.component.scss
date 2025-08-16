@@ -1,0 +1,133 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .logo-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .forgot-password {
+    color: var(--dark-moss-green);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--tigers-eye);
+      text-decoration: underline;
+    }
+  }
+}
+
+.submit-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+
+  .button-spinner {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.divider {
+  margin: 32px 0 24px;
+}
+
+.register-link {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+
+  .register-button {
+    color: var(--dark-moss-green);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 8px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--tigers-eye);
+      text-decoration: underline;
+    }
+  }
+}
+
+::ng-deep {
+  .success-snackbar {
+    background: #4caf50 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .error-snackbar {
+    background: #f44336 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 24px;
+  }
+
+  .login-header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+}
