@@ -30,6 +30,7 @@
     
     .report-card {
       transition: transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
       
       &:hover {
         transform: translateY(-4px);
@@ -66,8 +67,10 @@
         display: flex;
         justify-content: space-around;
         border-top: 1px solid #e0e0e0;
-        padding: 8px 0;
+        padding: 8px 16px;
         margin: 0 -16px -16px;
+        background-color: #fafafa;
+        overflow: hidden;
       }
     }
   }

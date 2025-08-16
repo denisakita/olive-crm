@@ -8,97 +8,110 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
-  
+
   <div class="barrels-stats">
     <mat-card class="stat-card">
       <mat-icon color="primary">storage</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">{{barrels.length}}</span>
+        <span class="stat-value">{{ barrels.length }}</span>
         <span class="stat-label">Total Barrels</span>
       </div>
     </mat-card>
-    
+
     <mat-card class="stat-card">
       <mat-icon color="accent">local_drink</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">1,375L</span>
+        <span class="stat-value">{{ getTotalLiters() }}L</span>
         <span class="stat-label">Total Volume</span>
       </div>
     </mat-card>
-    
-    <mat-card class="stat-card">
-      <mat-icon color="warn">hourglass_empty</mat-icon>
-      <div class="stat-info">
-        <span class="stat-value">2</span>
-        <span class="stat-label">Aging</span>
-      </div>
-    </mat-card>
-    
+
     <mat-card class="stat-card">
       <mat-icon style="color: #4caf50">check_circle</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">1</span>
-        <span class="stat-label">Ready</span>
+        <span class="stat-value">{{ getFullBarrels() }}</span>
+        <span class="stat-label">Full Barrels</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-icon color="accent">hourglass_bottom</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ getPartialBarrels() }}</span>
+        <span class="stat-label">Partial</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-icon color="warn">hourglass_empty</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ getEmptyBarrels() }}</span>
+        <span class="stat-label">Empty</span>
       </div>
     </mat-card>
   </div>
-  
+
   <div class="barrels-grid">
     <mat-card *ngFor="let barrel of barrels" class="barrel-card">
       <mat-card-header>
-        <mat-card-title>{{barrel.id}}</mat-card-title>
-        <mat-card-subtitle>{{barrel.type}} Barrel</mat-card-subtitle>
+        <mat-card-title>{{ barrel.id }}</mat-card-title>
+        <mat-card-subtitle>{{ barrel.type }} Barrel</mat-card-subtitle>
         <mat-chip [color]="getStatusColor(barrel.status)" class="status-chip">
-          {{barrel.status}}
+          {{ barrel.status }}
         </mat-chip>
       </mat-card-header>
-      
+
       <mat-card-content>
         <div class="barrel-info">
           <div class="info-row">
             <mat-icon>local_drink</mat-icon>
-            <span>{{barrel.product || 'Empty'}}</span>
+            <span>{{ barrel.product || 'Empty - No Product' }}</span>
           </div>
-          
+
           <div class="info-row">
             <mat-icon>location_on</mat-icon>
-            <span>{{barrel.location}}</span>
+            <span>{{ barrel.location }}</span>
           </div>
-          
+
           <div class="info-row">
             <mat-icon>calendar_today</mat-icon>
-            <span>Added: {{barrel.dateAdded | date:'MMM dd, yyyy'}}</span>
+            <span>Added: {{ barrel.dateAdded | date:'MMM dd, yyyy' }}</span>
           </div>
         </div>
-        
+
+        <div class="volume-stats">
+          <div class="volume-item">
+            <mat-icon>water_drop</mat-icon>
+            <div class="volume-detail">
+              <span class="volume-label">Current Volume</span>
+              <span class="volume-value">{{ barrel.currentVolume }} Liters</span>
+            </div>
+          </div>
+
+          <div class="volume-item">
+            <mat-icon>local_bar</mat-icon>
+            <div class="volume-detail">
+              <span class="volume-label">Bottle Coverage</span>
+              <span class="volume-value">{{ getBottlesFilled(barrel) }} / {{ getTotalBottleCapacity(barrel) }}
+                bottles</span>
+            </div>
+          </div>
+        </div>
+
         <div class="capacity-section">
           <div class="capacity-header">
-            <span>Capacity</span>
-            <span>{{barrel.currentVolume}}L / {{barrel.capacity}}L</span>
+            <span>Fill Level</span>
+            <span>{{ barrel.currentVolume }}L / {{ barrel.capacity }}L</span>
           </div>
-          <mat-progress-bar 
-            mode="determinate" 
+          <mat-progress-bar
+            mode="determinate"
             [value]="getFillPercentage(barrel)"
-            [color]="barrel.status === 'Empty' ? 'warn' : 'primary'">
+            [color]="barrel.status === 'Empty' ? 'warn' : barrel.status === 'Full' ? 'primary' : 'accent'">
           </mat-progress-bar>
-          <span class="capacity-percentage">{{getFillPercentage(barrel) | percent:'1.0-0'}}</span>
+          <span class="capacity-percentage">{{ getFillPercentage(barrel) | percent:'1.0-0' }} Full</span>
         </div>
       </mat-card-content>
-      
-      <div class="barrel-actions">
-        <button mat-button color="primary">
-          <mat-icon>visibility</mat-icon>
-          View Details
-        </button>
-        <button mat-button>
-          <mat-icon>edit</mat-icon>
-          Edit
-        </button>
-        <button mat-button [disabled]="barrel.status !== 'Ready'">
-          <mat-icon>local_shipping</mat-icon>
-          Transfer
-        </button>
-      </div>
+
     </mat-card>
   </div>
 </div>

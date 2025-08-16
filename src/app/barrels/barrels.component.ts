@@ -13,8 +13,9 @@ export interface Barrel {
   currentVolume: number;
   product: string;
   dateAdded: Date;
-  status: 'Active' | 'Aging' | 'Ready' | 'Empty';
+  status: 'Empty' | 'Partial' | 'Full';
   location: string;
+  bottleCapacity?: number; // How many 750ml bottles this barrel can fill
 }
 
 @Component({
@@ -47,8 +48,9 @@ export class BarrelsComponent {
       currentVolume: 200,
       product: 'Extra Virgin Olive Oil',
       dateAdded: new Date('2024-01-15'),
-      status: 'Aging',
-      location: 'Warehouse A'
+      status: 'Partial',
+      location: 'Warehouse A',
+      bottleCapacity: 267
     },
     {
       id: 'B2024-002',
@@ -57,8 +59,9 @@ export class BarrelsComponent {
       currentVolume: 450,
       product: 'Premium Olive Oil',
       dateAdded: new Date('2024-02-20'),
-      status: 'Active',
-      location: 'Warehouse B'
+      status: 'Partial',
+      location: 'Warehouse B',
+      bottleCapacity: 600
     },
     {
       id: 'B2024-003',
@@ -67,8 +70,9 @@ export class BarrelsComponent {
       currentVolume: 225,
       product: 'Organic Olive Oil',
       dateAdded: new Date('2024-03-10'),
-      status: 'Ready',
-      location: 'Warehouse A'
+      status: 'Full',
+      location: 'Warehouse A',
+      bottleCapacity: 300
     },
     {
       id: 'B2024-004',
@@ -78,15 +82,37 @@ export class BarrelsComponent {
       product: '',
       dateAdded: new Date('2024-03-15'),
       status: 'Empty',
-      location: 'Warehouse C'
+      location: 'Warehouse C',
+      bottleCapacity: 400
+    },
+    {
+      id: 'B2024-005',
+      type: 'Stainless Steel',
+      capacity: 1000,
+      currentVolume: 1000,
+      product: 'Premium Blend',
+      dateAdded: new Date('2024-03-20'),
+      status: 'Full',
+      location: 'Warehouse A',
+      bottleCapacity: 1333
+    },
+    {
+      id: 'B2024-006',
+      type: 'Oak',
+      capacity: 225,
+      currentVolume: 150,
+      product: 'Infused Olive Oil',
+      dateAdded: new Date('2024-03-25'),
+      status: 'Partial',
+      location: 'Warehouse B',
+      bottleCapacity: 200
     }
   ];
 
   getStatusColor(status: string): string {
     switch(status) {
-      case 'Active': return 'primary';
-      case 'Aging': return 'accent';
-      case 'Ready': return 'success';
+      case 'Full': return 'primary';
+      case 'Partial': return 'accent';
       case 'Empty': return 'warn';
       default: return '';
     }
@@ -94,5 +120,31 @@ export class BarrelsComponent {
 
   getFillPercentage(barrel: Barrel): number {
     return (barrel.currentVolume / barrel.capacity) * 100;
+  }
+  
+  getBottlesFilled(barrel: Barrel): number {
+    // Calculate how many 750ml bottles can be filled from current volume
+    return Math.floor(barrel.currentVolume / 0.75);
+  }
+  
+  getTotalBottleCapacity(barrel: Barrel): number {
+    // Calculate total bottle capacity from full barrel
+    return Math.floor(barrel.capacity / 0.75);
+  }
+  
+  getTotalLiters(): number {
+    return this.barrels.reduce((sum, barrel) => sum + barrel.currentVolume, 0);
+  }
+  
+  getFullBarrels(): number {
+    return this.barrels.filter(b => b.status === 'Full').length;
+  }
+  
+  getPartialBarrels(): number {
+    return this.barrels.filter(b => b.status === 'Partial').length;
+  }
+  
+  getEmptyBarrels(): number {
+    return this.barrels.filter(b => b.status === 'Empty').length;
   }
 }
