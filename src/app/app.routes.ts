@@ -5,6 +5,10 @@ import { UserRole } from './models/auth.interface';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+  {
     path: '',
     component: MainLayout,
     // canActivate: [AuthGuard],
@@ -45,14 +49,7 @@ export const routes: Routes = [
       }
     ]
   },
-  {
-    path: 'login',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
-  },
-  {
-    path: 'unauthorized',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
-  },
+
   {
     path: '**',
     redirectTo: '/dashboard'

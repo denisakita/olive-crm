@@ -9,7 +9,8 @@ import {
   MatNativeDateModule,
   MatButtonModule,
   MatIconModule,
-  MatDividerModule
+  MatDividerModule,
+  MatCardModule
 } from '../../shared/material.module';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -29,7 +30,8 @@ import { Sale } from '../../models/sale.interface';
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule
   ],
   templateUrl: './add-sale-dialog.component.html',
   styleUrl: './add-sale-dialog.component.scss'
@@ -111,5 +113,20 @@ export class AddSaleDialogComponent {
       this.sale.price &&
       this.sale.price > 0
     );
+  }
+
+  getSubtotal(): number {
+    return (this.sale.quantity || 0) * (this.sale.price || 0);
+  }
+
+  getDiscountAmount(): number {
+    const subtotal = this.getSubtotal();
+    return subtotal * ((this.sale.discount || 0) / 100);
+  }
+
+  getTaxAmount(): number {
+    const subtotal = this.getSubtotal();
+    const afterDiscount = subtotal - this.getDiscountAmount();
+    return afterDiscount * ((this.sale.tax || 0) / 100);
   }
 }

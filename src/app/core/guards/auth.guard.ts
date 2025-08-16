@@ -27,7 +27,7 @@ export class AuthGuard {
           sessionStorage.setItem('returnUrl', returnUrl);
         }
         
-        return this.router.createUrlTree(['/login']);
+        return this.router.createUrlTree(['/auth/login']);
       })
     );
   }

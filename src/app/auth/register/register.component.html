@@ -1,0 +1,151 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <div class="register-header">
+      <mat-icon class="logo-icon" color="primary">eco</mat-icon>
+      <h1>Create Account</h1>
+      <p>Join Olive CRM to manage your business</p>
+    </div>
+
+    <mat-stepper linear #stepper>
+      <!-- Account Information Step -->
+      <mat-step [stepControl]="accountForm">
+        <form [formGroup]="accountForm">
+          <ng-template matStepLabel>Account Information</ng-template>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" autocomplete="username">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="accountForm.get('username')?.hasError('required')">
+              Username is required
+            </mat-error>
+            <mat-error *ngIf="accountForm.get('username')?.hasError('minlength')">
+              Username must be at least 3 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" autocomplete="email">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="accountForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="accountForm.get('email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" 
+                   formControlName="password" autocomplete="new-password">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" 
+                    [attr.aria-label]="'Hide password'" type="button">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="accountForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="accountForm.get('password')?.hasError('minlength')">
+              Password must be at least 6 characters
+            </mat-error>
+            <mat-error *ngIf="accountForm.get('password')?.hasError('weakPassword')">
+              Password must contain uppercase, lowercase, number and special character
+            </mat-error>
+            <mat-hint *ngIf="accountForm.get('password')?.value">
+              Strength: {{getPasswordStrengthText()}}
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-progress-bar 
+            *ngIf="accountForm.get('password')?.value"
+            [value]="getPasswordStrength()" 
+            [color]="getPasswordStrengthColor()"
+            class="password-strength-bar">
+          </mat-progress-bar>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" 
+                   formControlName="confirmPassword" autocomplete="new-password">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" 
+                    [attr.aria-label]="'Hide password'" type="button">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="accountForm.get('confirmPassword')?.hasError('required')">
+              Please confirm your password
+            </mat-error>
+            <mat-error *ngIf="accountForm.hasError('passwordMismatch')">
+              Passwords do not match
+            </mat-error>
+          </mat-form-field>
+
+          <div class="step-actions">
+            <button mat-raised-button matStepperNext color="primary" 
+                    [disabled]="accountForm.invalid">
+              Next
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Personal Information Step -->
+      <mat-step [stepControl]="personalForm">
+        <form [formGroup]="personalForm">
+          <ng-template matStepLabel>Personal Information</ng-template>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" autocomplete="given-name">
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-error *ngIf="personalForm.get('firstName')?.hasError('required')">
+              First name is required
+            </mat-error>
+            <mat-error *ngIf="personalForm.get('firstName')?.hasError('minlength')">
+              First name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" autocomplete="family-name">
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-error *ngIf="personalForm.get('lastName')?.hasError('required')">
+              Last name is required
+            </mat-error>
+            <mat-error *ngIf="personalForm.get('lastName')?.hasError('minlength')">
+              Last name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-checkbox formControlName="acceptTerms" color="primary" class="terms-checkbox">
+            I agree to the <a href="/terms" target="_blank">Terms and Conditions</a> 
+            and <a href="/privacy" target="_blank">Privacy Policy</a>
+          </mat-checkbox>
+          <mat-error *ngIf="personalForm.get('acceptTerms')?.touched && personalForm.get('acceptTerms')?.hasError('required')" class="terms-error">
+            You must accept the terms and conditions
+          </mat-error>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" (click)="onSubmit()" 
+                    [disabled]="loading || accountForm.invalid || personalForm.invalid">
+              <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+              <span *ngIf="!loading">Create Account</span>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <div class="login-link">
+      <span>Already have an account?</span>
+      <a routerLink="/auth/login" class="login-button">Sign In</a>
+    </div>
+  </mat-card>
+</div>

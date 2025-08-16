@@ -14,7 +14,7 @@ h2[mat-dialog-title] {
   font-size: 24px;
   
   mat-icon {
-    color: #3f51b5;
+    color: var(--dark-moss-green);
   }
 }
 
@@ -35,7 +35,7 @@ mat-dialog-content {
         margin: 0 0 16px 0;
         font-size: 16px;
         font-weight: 500;
-        color: #666;
+        color: var(--text-secondary);
       }
       
       .form-row {
@@ -70,25 +70,58 @@ mat-dialog-content {
     }
     
     .total-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 8px;
-      padding: 20px;
       margin-top: 24px;
       
-      .total-display {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      .total-card {
+        background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
         color: white;
         
-        .total-label {
-          font-size: 18px;
-          font-weight: 500;
-        }
-        
-        .total-value {
-          font-size: 28px;
-          font-weight: bold;
+        .calculation-breakdown {
+          padding: 16px;
+          
+          .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            
+            .calc-label {
+              font-size: 14px;
+              opacity: 0.9;
+            }
+            
+            .calc-value {
+              font-size: 16px;
+              font-weight: 500;
+              
+              &.discount {
+                color: var(--sunset);
+              }
+            }
+          }
+          
+          mat-divider {
+            margin: 16px 0;
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+          
+          .total-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            
+            .total-label {
+              font-size: 18px;
+              font-weight: 600;
+            }
+            
+            .total-value {
+              font-size: 32px;
+              font-weight: bold;
+              color: var(--cornsilk);
+            }
+          }
         }
       }
     }
@@ -97,13 +130,18 @@ mat-dialog-content {
 
 mat-dialog-actions {
   padding: 16px 24px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color);
   
   button {
     margin-left: 8px;
     
     mat-icon {
       margin-right: 4px;
+    }
+    
+    &.mat-mdc-raised-button.mat-primary {
+      background-color: var(--dark-moss-green);
+      color: white;
     }
   }
 }

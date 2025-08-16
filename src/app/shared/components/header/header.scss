@@ -4,16 +4,24 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px var(--shadow-color);
+  background-color: var(--dark-moss-green);
+  color: white;
   
   .menu-button {
     margin-right: 16px;
+    color: white;
+    
+    mat-icon {
+      color: white;
+    }
   }
   
   .app-title {
     font-size: 20px;
     font-weight: 500;
     letter-spacing: 0.5px;
+    color: white;
   }
   
   .spacer {
@@ -22,15 +30,22 @@
   
   .header-action {
     margin: 0 4px;
+    color: white;
+    
+    mat-icon {
+      color: white;
+    }
   }
   
   .user-menu-button {
     margin-left: 8px;
+    color: white;
     
     mat-icon {
       font-size: 32px;
       width: 32px;
       height: 32px;
+      color: white;
     }
   }
 }

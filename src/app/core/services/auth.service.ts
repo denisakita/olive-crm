@@ -309,7 +309,7 @@ export class AuthService {
           error: (error) => {
             console.error('Token refresh failed:', error);
             this.clearAuth();
-            this.router.navigate(['/login']);
+            this.router.navigate(['/auth/login']);
           }
         });
       }, delay);

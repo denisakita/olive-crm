@@ -34,7 +34,7 @@
 
       &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px var(--shadow-color);
       }
 
       mat-card-header {
@@ -47,7 +47,7 @@
         display: flex;
         gap: 16px;
         margin-top: 12px;
-        color: #666;
+        color: var(--text-secondary);
         font-size: 14px;
 
         span {
@@ -66,10 +66,10 @@
       .report-actions {
         display: flex;
         justify-content: space-around;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid var(--border-color);
         padding: 8px 16px;
         margin: 0 -16px -16px;
-        background-color: #fafafa;
+        background-color: var(--cornsilk);
         overflow: hidden;
       }
     }
@@ -84,7 +84,7 @@
 
       .chart-placeholder {
         height: 200px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--dark-moss-green) 0%, var(--pakistan-green) 100%);
         border-radius: 8px;
         display: flex;
         flex-direction: column;

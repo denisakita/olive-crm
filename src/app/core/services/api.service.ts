@@ -131,7 +131,7 @@ export class ApiService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     // You can inject Router and navigate to login
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   }
 
   /**
