@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
-import { MatList, MatListItem } from '@angular/material/list';
+import {
+  MatCardModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatButtonModule,
+  MatIconModule,
+  MatDividerModule,
+  MatListModule
+} from '../shared/material.module';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgIf } from '@angular/common';
 
@@ -13,19 +15,13 @@ import { DatePipe, NgIf } from '@angular/common';
   selector: 'app-profile',
   standalone: true,
   imports: [
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatButton,
-    MatIcon,
-    MatDivider,
-    MatList,
-    MatListItem,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatListModule,
     FormsModule,
     DatePipe,
     NgIf

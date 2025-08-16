@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
-import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
-import { MatDivider, MatListItem, MatNavList } from '@angular/material/list';
+import {
+  MatSidenavModule,
+  MatListModule,
+  MatDividerModule,
+  MatIconModule
+} from '../../material.module';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
-    MatIcon,
-    MatSidenavContent,
-    RouterLinkActive,
+    MatSidenavModule,
+    MatListModule,
+    MatDividerModule,
+    MatIconModule,
     RouterLink,
-    MatListItem,
-    MatSidenav,
-    MatSidenavContainer,
-    MatNavList,
-    MatDivider
+    RouterLinkActive
   ],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'

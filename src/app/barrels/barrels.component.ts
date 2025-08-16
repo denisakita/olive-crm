@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
-import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatChip } from '@angular/material/chips';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import {
+  MatCardModule,
+  MatButtonModule,
+  MatIconModule,
+  MatChipsModule,
+  MatProgressBarModule
+} from '../shared/material.module';
 import { DatePipe, PercentPipe, NgFor } from '@angular/common';
 
 export interface Barrel {
@@ -22,16 +24,11 @@ export interface Barrel {
   selector: 'app-barrels',
   standalone: true,
   imports: [
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatButton,
-    MatFabButton,
-    MatIcon,
-    MatChip,
-    MatProgressBar,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressBarModule,
     DatePipe,
     PercentPipe,
     NgFor

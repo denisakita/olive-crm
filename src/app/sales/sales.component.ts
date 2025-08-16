@@ -1,15 +1,24 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { MatTable, MatTableDataSource, MatColumnDef, MatHeaderCell, MatCell, MatHeaderCellDef, MatCellDef, MatHeaderRow, MatRow, MatHeaderRowDef, MatRowDef } from '@angular/material/table';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  MatCardModule,
+  MatTableModule,
+  MatSortModule,
+  MatPaginatorModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatButtonModule,
+  MatIconModule,
+  MatDialogModule
+} from '../shared/material.module';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AddSaleDialogComponent } from './add-sale-dialog/add-sale-dialog.component';
+import { DialogService } from '../shared/services/dialog.service';
 
 export interface Sale {
   id: number;
@@ -25,30 +34,16 @@ export interface Sale {
   selector: 'app-sales',
   standalone: true,
   imports: [
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatHeaderRow,
-    MatRow,
-    MatHeaderRowDef,
-    MatRowDef,
-    MatSort,
-    MatSortHeader,
-    MatPaginator,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatSelect,
-    MatOption,
-    MatButton,
-    MatIcon,
+    MatCardModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
     DatePipe,
     CurrencyPipe,
     FormsModule
@@ -76,6 +71,11 @@ export class SalesComponent implements AfterViewInit {
   
   filterValue = '';
   statusFilter = '';
+  
+  constructor(
+    private dialog: MatDialog,
+    private dialogService: DialogService
+  ) {}
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -114,5 +114,78 @@ export class SalesComponent implements AfterViewInit {
     this.filterValue = '';
     this.statusFilter = '';
     this.applyFilter();
+  }
+  
+  openAddSaleDialog(): void {
+    const dialogRef = this.dialog.open(AddSaleDialogComponent, {
+      width: '700px',
+      disableClose: false,
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Add the new sale to the data source
+        const newSale: Sale = {
+          id: this.dataSource.data.length + 1,
+          customer: result.customerName,
+          product: result.product,
+          quantity: result.quantity,
+          price: result.price,
+          date: result.orderDate,
+          status: result.status
+        };
+        
+        const currentData = this.dataSource.data;
+        this.dataSource.data = [...currentData, newSale];
+        
+        // Show success message (you can add a snackbar here)
+        console.log('New sale added:', newSale);
+      }
+    });
+  }
+  
+  editSale(sale: Sale): void {
+    const dialogRef = this.dialog.open(AddSaleDialogComponent, {
+      width: '700px',
+      disableClose: false,
+      data: { sale: sale }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the sale in the data source
+        const index = this.dataSource.data.findIndex(s => s.id === sale.id);
+        if (index !== -1) {
+          this.dataSource.data[index] = { ...sale, ...result };
+          this.dataSource.data = [...this.dataSource.data];
+        }
+        console.log('Sale updated:', result);
+      }
+    });
+  }
+  
+  deleteSale(sale: Sale): void {
+    const saleDetails = [
+      `Customer: ${sale.customer}`,
+      `Product: ${sale.product}`,
+      `Amount: $${sale.price * sale.quantity}`
+    ];
+    
+    this.dialogService.confirmDelete(
+      `Sale #${sale.id}`,
+      'Are you sure you want to delete this sale order?',
+      saleDetails
+    ).subscribe(confirmed => {
+      if (confirmed) {
+        const index = this.dataSource.data.findIndex(s => s.id === sale.id);
+        if (index !== -1) {
+          const currentData = this.dataSource.data;
+          currentData.splice(index, 1);
+          this.dataSource.data = [...currentData];
+          console.log('Sale deleted:', sale);
+        }
+      }
+    });
   }
 }
