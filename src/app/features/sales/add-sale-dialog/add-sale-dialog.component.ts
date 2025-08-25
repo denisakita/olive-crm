@@ -1,20 +1,10 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSelectModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatButtonModule,
-  MatIconModule,
-  MatDividerModule,
-  MatCardModule
-} from '../../shared/material.module';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Sale } from '../../models/sale.interface';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MaterialModule} from '../../../shared/material.module';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {Sale} from '../../../models/sale.interface';
+
 
 @Component({
   selector: 'app-add-sale-dialog',
@@ -22,16 +12,7 @@ import { Sale } from '../../models/sale.interface';
   imports: [
     CommonModule,
     FormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatCardModule
+    MaterialModule
   ],
   templateUrl: './add-sale-dialog.component.html',
   styleUrl: './add-sale-dialog.component.scss'
@@ -64,17 +45,17 @@ export class AddSaleDialogComponent {
   ];
 
   paymentMethods = [
-    { value: 'cash', label: 'Cash' },
-    { value: 'credit', label: 'Credit Card' },
-    { value: 'transfer', label: 'Bank Transfer' },
-    { value: 'check', label: 'Check' }
+    {value: 'cash', label: 'Cash'},
+    {value: 'credit', label: 'Credit Card'},
+    {value: 'transfer', label: 'Bank Transfer'},
+    {value: 'check', label: 'Check'}
   ];
 
   statuses = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'shipped', label: 'Shipped' },
-    { value: 'cancelled', label: 'Cancelled' }
+    {value: 'pending', label: 'Pending'},
+    {value: 'completed', label: 'Completed'},
+    {value: 'shipped', label: 'Shipped'},
+    {value: 'cancelled', label: 'Cancelled'}
   ];
 
   constructor(
@@ -82,7 +63,7 @@ export class AddSaleDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (data && data.sale) {
-      this.sale = { ...data.sale };
+      this.sale = {...data.sale};
     }
   }
 

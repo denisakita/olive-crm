@@ -3,22 +3,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  MatCardModule,
-  MatTableModule,
-  MatSortModule,
-  MatPaginatorModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSelectModule,
-  MatButtonModule,
-  MatIconModule,
-  MatDialogModule
-} from '../shared/material.module';
+import {MaterialModule} from '../../shared/material.module';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddSaleDialogComponent } from './add-sale-dialog/add-sale-dialog.component';
-import { DialogService } from '../shared/services/dialog.service';
+import {DialogService} from '../../shared/services/dialog.service';
 
 export interface Sale {
   id: number;
@@ -34,16 +23,7 @@ export interface Sale {
   selector: 'app-sales',
   standalone: true,
   imports: [
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
+   MaterialModule,
     DatePipe,
     CurrencyPipe,
     FormsModule
@@ -54,7 +34,7 @@ export interface Sale {
 export class SalesComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  
+
   displayedColumns: string[] = ['id', 'customer', 'product', 'quantity', 'price', 'date', 'status', 'actions'];
   dataSource = new MatTableDataSource<Sale>([
     { id: 1, customer: 'John Doe', product: 'Olive Oil Premium', quantity: 5, price: 150, date: new Date('2024-01-15'), status: 'Completed' },
@@ -68,40 +48,40 @@ export class SalesComponent implements AfterViewInit {
     { id: 9, customer: 'George Hill', product: 'Olive Oil Premium', quantity: 4, price: 120, date: new Date('2024-01-23'), status: 'Cancelled' },
     { id: 10, customer: 'Helen Troy', product: 'Extra Virgin Oil', quantity: 7, price: 280, date: new Date('2024-01-24'), status: 'Completed' },
   ]);
-  
+
   filterValue = '';
   statusFilter = '';
-  
+
   constructor(
     private dialog: MatDialog,
     private dialogService: DialogService
   ) {}
-  
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    
+
     // Custom filter predicate for multiple filters
     this.dataSource.filterPredicate = (data: Sale, filter: string) => {
       const filters = JSON.parse(filter);
       let matchesSearch = true;
       let matchesStatus = true;
-      
+
       if (filters.search) {
         const searchStr = filters.search.toLowerCase();
         matchesSearch = data.customer.toLowerCase().includes(searchStr) ||
                        data.product.toLowerCase().includes(searchStr) ||
                        data.id.toString().includes(searchStr);
       }
-      
+
       if (filters.status && filters.status !== 'all') {
         matchesStatus = data.status.toLowerCase() === filters.status.toLowerCase();
       }
-      
+
       return matchesSearch && matchesStatus;
     };
   }
-  
+
   applyFilter() {
     const filters = {
       search: this.filterValue,
@@ -109,13 +89,13 @@ export class SalesComponent implements AfterViewInit {
     };
     this.dataSource.filter = JSON.stringify(filters);
   }
-  
+
   clearFilters() {
     this.filterValue = '';
     this.statusFilter = '';
     this.applyFilter();
   }
-  
+
   openAddSaleDialog(): void {
     const dialogRef = this.dialog.open(AddSaleDialogComponent, {
       width: '700px',
@@ -135,16 +115,16 @@ export class SalesComponent implements AfterViewInit {
           date: result.orderDate,
           status: result.status
         };
-        
+
         const currentData = this.dataSource.data;
         this.dataSource.data = [...currentData, newSale];
-        
+
         // Show success message (you can add a snackbar here)
         console.log('New sale added:', newSale);
       }
     });
   }
-  
+
   editSale(sale: Sale): void {
     const dialogRef = this.dialog.open(AddSaleDialogComponent, {
       width: '700px',
@@ -164,14 +144,14 @@ export class SalesComponent implements AfterViewInit {
       }
     });
   }
-  
+
   deleteSale(sale: Sale): void {
     const saleDetails = [
       `Customer: ${sale.customer}`,
       `Product: ${sale.product}`,
       `Amount: $${sale.price * sale.quantity}`
     ];
-    
+
     this.dialogService.confirmDelete(
       `Sale #${sale.id}`,
       'Are you sure you want to delete this sale order?',

@@ -18,12 +18,12 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" 
+        <input matInput [type]="hidePassword ? 'password' : 'text'"
                formControlName="password" autocomplete="current-password">
         <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" 
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
                 [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
           Password is required
@@ -42,7 +42,7 @@
         </a>
       </div>
 
-      <button mat-raised-button color="primary" type="submit" 
+      <button mat-raised-button color="primary" type="submit"
               class="full-width submit-button" [disabled]="loading">
         <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
         <span *ngIf="!loading">Sign In</span>

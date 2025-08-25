@@ -1,27 +1,14 @@
-import { Component } from '@angular/core';
-import {
-  MatCardModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatButtonModule,
-  MatIconModule,
-  MatDividerModule,
-  MatListModule
-} from '../shared/material.module';
-import { FormsModule } from '@angular/forms';
-import { DatePipe, NgIf } from '@angular/common';
+import {Component} from '@angular/core';
+
+import {FormsModule} from '@angular/forms';
+import {DatePipe, NgIf} from '@angular/common';
+import {MaterialModule} from '../../shared/material.module';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatListModule,
+    MaterialModule,
     FormsModule,
     DatePipe,
     NgIf
@@ -41,18 +28,18 @@ export class ProfileComponent {
     location: 'New York, USA',
     bio: 'Experienced olive oil industry professional with over 10 years in the business.'
   };
-  
+
   isEditing = false;
-  
+
   toggleEdit() {
     this.isEditing = !this.isEditing;
   }
-  
+
   saveProfile() {
     // Save profile logic here
     this.isEditing = false;
   }
-  
+
   cancelEdit() {
     // Reset changes
     this.isEditing = false;

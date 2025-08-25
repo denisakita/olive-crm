@@ -1,12 +1,6 @@
-import { Component } from '@angular/core';
-import {
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatChipsModule,
-  MatProgressBarModule
-} from '../shared/material.module';
-import { DatePipe, PercentPipe, NgFor } from '@angular/common';
+import {Component} from '@angular/core';
+import {DatePipe, NgFor, PercentPipe} from '@angular/common';
+import {MaterialModule} from '../../shared/material.module';
 
 export interface Barrel {
   id: string;
@@ -17,18 +11,14 @@ export interface Barrel {
   dateAdded: Date;
   status: 'Empty' | 'Partial' | 'Full';
   location: string;
-  bottleCapacity?: number; // How many 750ml bottles this barrel can fill
+  bottleCapacity?: number;
 }
 
 @Component({
   selector: 'app-barrels',
   standalone: true,
   imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressBarModule,
+    MaterialModule,
     DatePipe,
     PercentPipe,
     NgFor
@@ -83,17 +73,6 @@ export class BarrelsComponent {
       bottleCapacity: 400
     },
     {
-      id: 'B2024-005',
-      type: 'Stainless Steel',
-      capacity: 1000,
-      currentVolume: 1000,
-      product: 'Premium Blend',
-      dateAdded: new Date('2024-03-20'),
-      status: 'Full',
-      location: 'Warehouse A',
-      bottleCapacity: 1333
-    },
-    {
       id: 'B2024-006',
       type: 'Oak',
       capacity: 225,
@@ -107,11 +86,15 @@ export class BarrelsComponent {
   ];
 
   getStatusColor(status: string): string {
-    switch(status) {
-      case 'Full': return 'primary';
-      case 'Partial': return 'accent';
-      case 'Empty': return 'warn';
-      default: return '';
+    switch (status) {
+      case 'Full':
+        return 'primary';
+      case 'Partial':
+        return 'accent';
+      case 'Empty':
+        return 'warn';
+      default:
+        return '';
     }
   }
 

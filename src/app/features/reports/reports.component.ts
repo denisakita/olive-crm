@@ -1,20 +1,12 @@
 import {Component} from '@angular/core';
-import {
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatChipsModule
-} from '../shared/material.module';
 import {DatePipe, NgFor} from '@angular/common';
+import {MaterialModule} from '../../shared/material.module';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
   imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
+    MaterialModule,
     DatePipe,
     NgFor
   ],

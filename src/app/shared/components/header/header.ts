@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {
-  MatToolbarModule,
-  MatButtonModule,
-  MatIconModule,
   MatBadgeModule,
+  MatButtonModule,
+  MatDividerModule,
+  MatIconModule,
   MatMenuModule,
-  MatDividerModule
+  MatToolbarModule
 } from '../../material.module';
-import { Router, RouterLink } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -25,14 +26,27 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class Header {
   @Output() sidebarToggle = new EventEmitter<void>();
-  
-  constructor(private router: Router) {}
-  
+
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
+  }
+
   toggleSidebar(): void {
     this.sidebarToggle.emit();
   }
-  
+
   logout(): void {
-    this.router.navigate(['/auth/login']);
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/auth/login']);
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+        // Even if logout fails on server, navigate to login
+        this.router.navigate(['/auth/login']);
+      }
+    });
   }
 }
