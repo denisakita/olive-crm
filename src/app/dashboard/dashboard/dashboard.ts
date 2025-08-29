@@ -1,10 +1,5 @@
 import {Component} from '@angular/core';
-import {
-  MatCardModule,
-  MatDividerModule,
-  MatButtonModule,
-  MatIconModule
-} from '../../shared/material.module';
+import {MatButtonModule, MatCardModule, MatDividerModule, MatIconModule} from '../../shared/material.module';
 
 @Component({
   selector: 'app-dashboard',

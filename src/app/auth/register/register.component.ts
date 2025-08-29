@@ -121,8 +121,8 @@ export class RegisterComponent implements OnInit {
       ...this.personalForm.value
     };
 
-    // Remove confirmPassword from the data sent to server
-    delete registerData.confirmPassword;
+    // Don't remove confirmPassword - backend needs it for validation
+    // delete registerData.confirmPassword;
 
     this.authService.register(registerData).subscribe({
       next: () => {

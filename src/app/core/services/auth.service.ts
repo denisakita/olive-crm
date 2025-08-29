@@ -50,12 +50,13 @@ export class AuthService {
   }
 
   /**
-   * Load authentication data from localStorage
+   * Load authentication data from localStorage or sessionStorage
    */
   private loadStoredAuth(): void {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    const userJson = localStorage.getItem(this.USER_KEY);
+    // Check localStorage first (persistent), then sessionStorage (session-only)
+    let token = localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
+    let refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY) || sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+    let userJson = localStorage.getItem(this.USER_KEY) || sessionStorage.getItem(this.USER_KEY);
 
     if (token && userJson) {
       try {
@@ -140,19 +141,24 @@ export class AuthService {
     const url = `${environment.apiUrl}${environment.endpoints.auth.logout}`;
     const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
 
-    // Clear local auth immediately
-    this.clearAuth();
-
-    // Notify server if we have a refresh token
+    // Notify server first (while we still have the auth token)
     if (refreshToken) {
       return this.http.post(url, {refresh: refreshToken}).pipe(
-        catchError(() => {
-          // Ignore logout errors, already cleared locally
+        tap(() => {
+          // Clear local auth after successful logout
+          this.clearAuth();
+        }),
+        catchError((error) => {
+          // Clear auth even if server logout fails
+          this.clearAuth();
+          // Return success since local logout is complete
           return of(null);
         })
       );
     }
 
+    // If no refresh token, just clear local auth
+    this.clearAuth();
     return of(null);
   }
 
@@ -242,16 +248,23 @@ export class AuthService {
    * Handle login response
    */
   private handleLoginResponse(response: LoginResponse, rememberMe?: boolean): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
-
-    storage.setItem(this.TOKEN_KEY, response.access);
-    storage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
-    storage.setItem(this.USER_KEY, JSON.stringify(response.user));
-
-    // Also set in localStorage for token persistence
-    if (!rememberMe) {
+    // If rememberMe is true, use localStorage (persistent)
+    // If rememberMe is false, use sessionStorage (closes with browser)
+    if (rememberMe) {
+      // Persistent storage - survives browser close
       localStorage.setItem(this.TOKEN_KEY, response.access);
       localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+    } else {
+      // Session storage - cleared when browser closes
+      sessionStorage.setItem(this.TOKEN_KEY, response.access);
+      sessionStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
+      sessionStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+      
+      // Clear any existing localStorage to ensure session-only
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+      localStorage.removeItem(this.USER_KEY);
     }
 
     this.updateAuthState({
@@ -346,9 +359,10 @@ export class AuthService {
   }
 
   /**
-   * Clear authentication data
+   * Clear authentication data from both storages
    */
   private clearAuth(): void {
+    // Clear from both localStorage and sessionStorage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
@@ -371,10 +385,17 @@ export class AuthService {
   }
 
   /**
-   * Get current token
+   * Get current token from state or storage
    */
   getToken(): string | null {
-    return this.authStateSubject.value.token;
+    // First check the current state
+    const stateToken = this.authStateSubject.value.token;
+    if (stateToken) {
+      return stateToken;
+    }
+    
+    // Otherwise check storages (localStorage first for persistent, then sessionStorage)
+    return localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
   }
 
   /**

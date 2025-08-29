@@ -1,41 +1,37 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, filter, take, switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, filter, switchMap, take} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Add auth token if available
-    const token = this.getToken();
-    if (token) {
-      request = this.addToken(request, token);
+    // Skip adding token for login and register endpoints
+    const isAuthEndpoint = request.url.includes('/auth/login') ||
+      request.url.includes('/auth/register') ||
+      request.url.includes('/auth/refresh');
+
+    // Add auth token if available and not an auth endpoint
+    if (!isAuthEndpoint) {
+      const token = this.getToken();
+      if (token) {
+        request = this.addToken(request, token);
+      }
     }
 
-    // Add CORS headers
-    request = request.clone({
-      setHeaders: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      }
-    });
+    // Don't add CORS headers - let the server handle CORS
+    // The browser and server will manage CORS properly
 
     return next.handle(request).pipe(
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
+        if (error instanceof HttpErrorResponse && error.status === 401 && !isAuthEndpoint) {
           return this.handle401Error(request, next);
         }
         return throwError(() => error);
@@ -52,7 +48,8 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private getToken(): string | null {
-    return localStorage.getItem('access_token');
+    // Check localStorage first (persistent), then sessionStorage (session-only)
+    return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -60,14 +57,19 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      const refreshToken = localStorage.getItem('refresh_token');
-      
+      const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+
       if (refreshToken) {
         return this.refreshAccessToken(refreshToken).pipe(
           switchMap((token: any) => {
             this.isRefreshing = false;
             this.refreshTokenSubject.next(token.access_token);
-            localStorage.setItem('access_token', token.access_token);
+            // Store in the same storage where refresh token was found
+            if (localStorage.getItem('refresh_token')) {
+              localStorage.setItem('access_token', token.access_token);
+            } else {
+              sessionStorage.setItem('access_token', token.access_token);
+            }
             return next.handle(this.addToken(request, token.access_token));
           }),
           catchError((err) => {

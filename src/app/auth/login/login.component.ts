@@ -49,10 +49,16 @@ export class LoginComponent implements OnInit {
   }
 
   initializeForm(): void {
+    // Check if credentials were saved previously
+    const savedUsername = localStorage.getItem('savedUsername');
+    const encodedPassword = localStorage.getItem('savedPassword');
+    const savedPassword = encodedPassword ? atob(encodedPassword) : ''; // Decode base64
+    const rememberMe = localStorage.getItem('rememberCredentials') === 'true';
+    
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      username: [savedUsername || '', [Validators.required]],
+      password: [savedPassword || '', [Validators.required, Validators.minLength(6)]],
+      rememberMe: [rememberMe]
     });
   }
 
@@ -64,6 +70,19 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     const credentials = this.loginForm.value;
+    
+    // Save or clear credentials based on Remember Me checkbox
+    if (credentials.rememberMe) {
+      // Save credentials for next time (encode password for minimal security)
+      localStorage.setItem('savedUsername', credentials.username);
+      localStorage.setItem('savedPassword', btoa(credentials.password)); // Encode as base64
+      localStorage.setItem('rememberCredentials', 'true');
+    } else {
+      // Clear saved credentials
+      localStorage.removeItem('savedUsername');
+      localStorage.removeItem('savedPassword');
+      localStorage.removeItem('rememberCredentials');
+    }
 
     this.authService.login(credentials).subscribe({
       next: () => {

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+import {Injectable} from '@angular/core';
+import {Router, UrlTree} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+import {AuthService} from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ export class AuthGuard {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   canActivate(): Observable<boolean | UrlTree> {
     return this.authService.isAuthenticated$.pipe(
@@ -20,13 +21,13 @@ export class AuthGuard {
         if (isAuthenticated) {
           return true;
         }
-        
+
         // Store attempted URL for redirecting after login
         const returnUrl = window.location.pathname;
         if (returnUrl && returnUrl !== '/login') {
           sessionStorage.setItem('returnUrl', returnUrl);
         }
-        
+
         return this.router.createUrlTree(['/auth/login']);
       })
     );
