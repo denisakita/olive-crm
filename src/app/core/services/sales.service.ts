@@ -255,4 +255,16 @@ export class SalesService {
     this.clearCache();
     return this.getSales(params);
   }
+
+  /**
+   * Get dropdown options for sales forms
+   */
+  getSalesOptions(): Observable<{
+    products: string[];
+    statuses: Array<{value: string, label: string}>;
+    payment_methods: Array<{value: string, label: string}>;
+  }> {
+    const endpoint = `${environment.endpoints.sales.base}options/`;
+    return this.api.get(endpoint);
+  }
 }

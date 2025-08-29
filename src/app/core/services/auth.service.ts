@@ -17,6 +17,7 @@ import {
   TokenRefreshResponse,
   User
 } from '../../models/auth.interface';
+import { Profile } from '../../models/profile.interface';
 
 @Injectable({
   providedIn: 'root'

@@ -1,9 +1,11 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MaterialModule} from '../../../shared/material.module';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {Sale} from '../../../models/sale.interface';
+import {SalesService} from '../../../core/services/sales.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -17,7 +19,7 @@ import {Sale} from '../../../models/sale.interface';
   templateUrl: './add-sale-dialog.component.html',
   styleUrl: './add-sale-dialog.component.scss'
 })
-export class AddSaleDialogComponent {
+export class AddSaleDialogComponent implements OnInit {
   sale: Partial<Sale> = {
     customerName: '',
     product: '',
@@ -32,35 +34,16 @@ export class AddSaleDialogComponent {
     notes: ''
   };
 
-  products = [
-    'Extra Virgin Olive Oil - 500ml',
-    'Extra Virgin Olive Oil - 750ml',
-    'Extra Virgin Olive Oil - 1L',
-    'Premium Olive Oil - 500ml',
-    'Premium Olive Oil - 750ml',
-    'Premium Olive Oil - 1L',
-    'Organic Olive Oil - 500ml',
-    'Organic Olive Oil - 750ml',
-    'Organic Olive Oil - 1L'
-  ];
-
-  paymentMethods = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'credit', label: 'Credit Card'},
-    {value: 'transfer', label: 'Bank Transfer'},
-    {value: 'check', label: 'Check'}
-  ];
-
-  statuses = [
-    {value: 'pending', label: 'Pending'},
-    {value: 'completed', label: 'Completed'},
-    {value: 'shipped', label: 'Shipped'},
-    {value: 'cancelled', label: 'Cancelled'}
-  ];
+  products: string[] = [];
+  paymentMethods: Array<{value: string, label: string}> = [];
+  statuses: Array<{value: string, label: string}> = [];
+  loading = true;
 
   constructor(
     public dialogRef: MatDialogRef<AddSaleDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private salesService: SalesService,
+    private snackBar: MatSnackBar
   ) {
     if (data && data.sale) {
       this.sale = {...data.sale};
@@ -73,6 +56,55 @@ export class AddSaleDialogComponent {
       // Recalculate total to ensure it's correct
       this.calculateTotal();
     }
+  }
+
+  ngOnInit(): void {
+    this.loadOptions();
+  }
+
+  loadOptions(): void {
+    this.loading = true;
+    this.salesService.getSalesOptions().subscribe({
+      next: (options) => {
+        this.products = options.products;
+        this.paymentMethods = options.payment_methods;
+        this.statuses = options.statuses;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading options:', error);
+        // Set default values as fallback
+        this.products = [
+          'Extra Virgin Olive Oil - 500ml',
+          'Extra Virgin Olive Oil - 750ml',
+          'Extra Virgin Olive Oil - 1L',
+          'Premium Olive Oil - 500ml',
+          'Premium Olive Oil - 750ml',
+          'Premium Olive Oil - 1L',
+          'Organic Olive Oil - 500ml',
+          'Organic Olive Oil - 750ml',
+          'Organic Olive Oil - 1L'
+        ];
+        this.paymentMethods = [
+          {value: 'cash', label: 'Cash'},
+          {value: 'credit', label: 'Credit Card'},
+          {value: 'transfer', label: 'Bank Transfer'},
+          {value: 'check', label: 'Check'}
+        ];
+        this.statuses = [
+          {value: 'pending', label: 'Pending'},
+          {value: 'completed', label: 'Completed'},
+          {value: 'shipped', label: 'Shipped'},
+          {value: 'cancelled', label: 'Cancelled'}
+        ];
+        this.loading = false;
+        this.snackBar.open(
+          'Failed to load options. Using defaults.',
+          'Close',
+          { duration: 3000, panelClass: ['warning-snackbar'] }
+        );
+      }
+    });
   }
 
   calculateTotal(): void {
@@ -100,7 +132,8 @@ export class AddSaleDialogComponent {
       this.sale.quantity &&
       this.sale.quantity > 0 &&
       this.sale.price &&
-      this.sale.price > 0
+      this.sale.price > 0 &&
+      !this.loading
     );
   }
 

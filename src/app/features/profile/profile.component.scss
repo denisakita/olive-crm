@@ -2,6 +2,36 @@
   padding: 24px;
   min-height: calc(100vh - 64px);
   background-color: var(--background-primary);
+  position: relative;
+
+  .loading-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    gap: 16px;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--text-secondary);
+    }
+
+    p {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+  }
 
   .profile-header {
     display: flex;

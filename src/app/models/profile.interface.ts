@@ -1,19 +1,21 @@
 export interface Profile {
-  id: string;
-  firstName: string;
-  lastName: string;
+  id?: number;
+  username: string;
   email: string;
-  phone: string;
-  role: string;
-  department: string;
-  location: string;
-  joinDate: Date;
-  bio: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  role?: string;
+  department?: string;
+  location?: string;
+  bio?: string;
   avatar?: string;
-  isActive: boolean;
-  lastLogin?: Date;
-  permissions?: UserPermission[];
-  preferences?: UserPreferences;
+  preferences?: any;
+  permissions?: any;
+  createdAt?: Date | string;
+  dateJoined?: Date | string;
+  lastLogin?: Date | string;
+  isActive?: boolean;
 }
 
 export interface UserPermission {
