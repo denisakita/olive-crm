@@ -19,7 +19,7 @@
 
         <mat-form-field appearance="outline" class="status-field">
           <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilter()">
+          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyStatusFilter()">
             <mat-option value="">All</mat-option>
             <mat-option value="completed">Completed</mat-option>
             <mat-option value="pending">Pending</mat-option>
@@ -107,7 +107,9 @@
 
       <!-- Pagination -->
       <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]"
-                     [pageSize]="10"
+                     [pageSize]="pageSize"
+                     [length]="totalItems"
+                     [pageIndex]="pageIndex"
                      showFirstLastButtons
                      aria-label="Select page of sales">
       </mat-paginator>

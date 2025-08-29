@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../shared/material.module';
@@ -12,7 +12,8 @@ import { DialogService } from '../../shared/services/dialog.service';
 import { SalesService } from '../../core/services/sales.service';
 import { Sale } from '../../models/sale.interface';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { QueryParams } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-sales',
@@ -38,8 +39,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   filterValue = '';
   statusFilter = '';
   loading = false;
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
+  sortActive = 'id';
+  sortDirection: 'asc' | 'desc' | '' = 'asc';
 
   private destroy$ = new Subject<void>();
+  private searchSubject$ = new Subject<string>();
 
   constructor(
     private dialog: MatDialog,
@@ -49,50 +56,110 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Setup search debounce
+    this.searchSubject$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.pageIndex = 0; // Reset to first page on new search
+        if (this.paginator) {
+          this.paginator.pageIndex = 0;
+        }
+        this.loadSales();
+      });
+
     this.loadSales();
   }
 
   ngAfterViewInit() {
+    // Connect sort to the data source for UI feedback
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    
+    // Handle sort changes for backend call
+    this.sort.sortChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((sort: Sort) => {
+        this.sortActive = sort.active;
+        this.sortDirection = sort.direction;
+        this.pageIndex = 0; // Reset to first page on sort change
+        // Reset paginator to first page
+        if (this.paginator) {
+          this.paginator.pageIndex = 0;
+        }
+        this.loadSales();
+      });
 
-    // Custom filter predicate for multiple filters
-    this.dataSource.filterPredicate = (data: Sale, filter: string) => {
-      const filters = JSON.parse(filter);
-      let matchesSearch = true;
-      let matchesStatus = true;
-
-      if (filters.search) {
-        const searchStr = filters.search.toLowerCase();
-        matchesSearch = data.customerName.toLowerCase().includes(searchStr) ||
-                       data.product.toLowerCase().includes(searchStr) ||
-                       data.id.toString().includes(searchStr);
-      }
-
-      if (filters.status && filters.status !== 'all') {
-        matchesStatus = data.status.toLowerCase() === filters.status.toLowerCase();
-      }
-
-      return matchesSearch && matchesStatus;
-    };
+    // Handle pagination changes
+    this.paginator.page
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((page: PageEvent) => {
+        this.pageIndex = page.pageIndex;
+        this.pageSize = page.pageSize;
+        this.loadSales();
+      });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.searchSubject$.complete();
   }
 
   /**
-   * Load sales from backend
+   * Load sales from backend with filters, sorting, and pagination
    */
   loadSales(): void {
     this.loading = true;
 
-    this.salesService.getSales()
+    // Build query parameters
+    const params: QueryParams = {
+      page: this.pageIndex + 1, // Backend uses 1-based pagination
+      page_size: this.pageSize
+    };
+
+    // Add search filter
+    if (this.filterValue) {
+      params['search'] = this.filterValue;
+    }
+
+    // Add status filter
+    if (this.statusFilter && this.statusFilter !== '') {
+      params['status'] = this.statusFilter;
+    }
+
+    // Add sorting
+    if (this.sortActive && this.sortDirection) {
+      // Convert frontend field names to backend field names
+      const fieldMapping: { [key: string]: string } = {
+        'id': 'id',
+        'customer': 'customer_name',
+        'product': 'product',
+        'quantity': 'quantity',
+        'price': 'price',
+        'date': 'order_date',
+        'status': 'status'
+      };
+      
+      const backendField = fieldMapping[this.sortActive] || this.sortActive;
+      params['ordering'] = this.sortDirection === 'desc' ? `-${backendField}` : backendField;
+    }
+
+    this.salesService.getSales(params)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           this.dataSource.data = response.results;
+          this.totalItems = response.count;
+          
+          // Update paginator
+          if (this.paginator) {
+            this.paginator.length = response.count;
+            this.paginator.pageIndex = this.pageIndex;
+          }
+          
           this.loading = false;
         },
         error: (error) => {
@@ -109,17 +176,27 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   applyFilter() {
-    const filters = {
-      search: this.filterValue,
-      status: this.statusFilter
-    };
-    this.dataSource.filter = JSON.stringify(filters);
+    // Trigger search with debounce
+    this.searchSubject$.next(this.filterValue);
+  }
+
+  applyStatusFilter() {
+    // Status filter applies immediately
+    this.pageIndex = 0; // Reset to first page
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+    this.loadSales();
   }
 
   clearFilters() {
     this.filterValue = '';
     this.statusFilter = '';
-    this.applyFilter();
+    this.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+    this.loadSales();
   }
 
   /**
