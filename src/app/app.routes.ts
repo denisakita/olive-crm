@@ -11,8 +11,8 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    // canActivate: [AuthGuard],
-    // canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
@@ -34,7 +34,6 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadChildren: () => import('./features/reports/reports.module').then(m => m.ReportsModule),
-        // canActivate: [AuthGuard],
         // data: { roles: [UserRole.ADMIN, UserRole.MANAGER] }
       },
       {
@@ -44,8 +43,8 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule),
-        // canActivate: [AuthGuard],
-        // data: { roles: [UserRole.ADMIN] }
+        //
+
       }
     ]
   },

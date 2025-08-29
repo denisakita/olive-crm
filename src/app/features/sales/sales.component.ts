@@ -1,61 +1,55 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import {MaterialModule} from '../../shared/material.module';
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MaterialModule } from '../../shared/material.module';
+import {DatePipe, CurrencyPipe, TitleCasePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddSaleDialogComponent } from './add-sale-dialog/add-sale-dialog.component';
-import {DialogService} from '../../shared/services/dialog.service';
-
-export interface Sale {
-  id: number;
-  customer: string;
-  product: string;
-  quantity: number;
-  price: number;
-  date: Date;
-  status: string;
-}
+import { DialogService } from '../../shared/services/dialog.service';
+import { SalesService } from '../../core/services/sales.service';
+import { Sale } from '../../models/sale.interface';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sales',
   standalone: true,
   imports: [
-   MaterialModule,
+    MaterialModule,
     DatePipe,
     CurrencyPipe,
-    FormsModule
+    FormsModule,
+    TitleCasePipe
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss'
 })
-export class SalesComponent implements AfterViewInit {
+export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = ['id', 'customer', 'product', 'quantity', 'price', 'date', 'status', 'actions'];
-  dataSource = new MatTableDataSource<Sale>([
-    { id: 1, customer: 'John Doe', product: 'Olive Oil Premium', quantity: 5, price: 150, date: new Date('2024-01-15'), status: 'Completed' },
-    { id: 2, customer: 'Jane Smith', product: 'Extra Virgin Oil', quantity: 3, price: 120, date: new Date('2024-01-16'), status: 'Pending' },
-    { id: 3, customer: 'Bob Johnson', product: 'Organic Olive Oil', quantity: 10, price: 350, date: new Date('2024-01-17'), status: 'Completed' },
-    { id: 4, customer: 'Alice Brown', product: 'Premium Blend', quantity: 8, price: 280, date: new Date('2024-01-18'), status: 'Processing' },
-    { id: 5, customer: 'Charlie Wilson', product: 'Olive Oil Premium', quantity: 15, price: 450, date: new Date('2024-01-19'), status: 'Completed' },
-    { id: 6, customer: 'Diana Prince', product: 'Extra Virgin Oil', quantity: 20, price: 800, date: new Date('2024-01-20'), status: 'Pending' },
-    { id: 7, customer: 'Edward Norton', product: 'Organic Olive Oil', quantity: 6, price: 210, date: new Date('2024-01-21'), status: 'Completed' },
-    { id: 8, customer: 'Fiona Green', product: 'Premium Blend', quantity: 12, price: 420, date: new Date('2024-01-22'), status: 'Processing' },
-    { id: 9, customer: 'George Hill', product: 'Olive Oil Premium', quantity: 4, price: 120, date: new Date('2024-01-23'), status: 'Cancelled' },
-    { id: 10, customer: 'Helen Troy', product: 'Extra Virgin Oil', quantity: 7, price: 280, date: new Date('2024-01-24'), status: 'Completed' },
-  ]);
+  dataSource = new MatTableDataSource<Sale>([]);
 
   filterValue = '';
   statusFilter = '';
+  loading = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private dialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private salesService: SalesService,
+    private snackBar: MatSnackBar
   ) {}
+
+  ngOnInit(): void {
+    this.loadSales();
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -69,7 +63,7 @@ export class SalesComponent implements AfterViewInit {
 
       if (filters.search) {
         const searchStr = filters.search.toLowerCase();
-        matchesSearch = data.customer.toLowerCase().includes(searchStr) ||
+        matchesSearch = data.customerName.toLowerCase().includes(searchStr) ||
                        data.product.toLowerCase().includes(searchStr) ||
                        data.id.toString().includes(searchStr);
       }
@@ -80,6 +74,43 @@ export class SalesComponent implements AfterViewInit {
 
       return matchesSearch && matchesStatus;
     };
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Load sales from backend
+   */
+  loadSales(): void {
+    this.loading = true;
+
+    this.salesService.getSales()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.dataSource.data = response.results;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading sales:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to load sales. Please try again.',
+            'Close',
+            { duration: 3000, panelClass: ['error-snackbar'] }
+          );
+        }
+      });
+  }
+
+  /**
+   * Refresh sales data
+   */
+  refreshSales(): void {
+    this.loadSales();
   }
 
   applyFilter() {
@@ -96,6 +127,9 @@ export class SalesComponent implements AfterViewInit {
     this.applyFilter();
   }
 
+  /**
+   * Open dialog to add new sale
+   */
   openAddSaleDialog(): void {
     const dialogRef = this.dialog.open(AddSaleDialogComponent, {
       width: '700px',
@@ -105,26 +139,47 @@ export class SalesComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Add the new sale to the data source
-        const newSale: Sale = {
-          id: this.dataSource.data.length + 1,
-          customer: result.customerName,
-          product: result.product,
-          quantity: result.quantity,
-          price: result.price,
-          date: result.orderDate,
-          status: result.status
-        };
-
-        const currentData = this.dataSource.data;
-        this.dataSource.data = [...currentData, newSale];
-
-        // Show success message (you can add a snackbar here)
-        console.log('New sale added:', newSale);
+        this.createSale(result);
       }
     });
   }
 
+  /**
+   * Create new sale
+   */
+  private createSale(saleData: Partial<Sale>): void {
+    this.loading = true;
+
+    this.salesService.createSale(saleData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (newSale) => {
+          // Add to table
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, newSale];
+
+          this.loading = false;
+          this.snackBar.open(
+            'Sale created successfully',
+            'Close',
+            { duration: 3000, panelClass: ['success-snackbar'] }
+          );
+        },
+        error: (error) => {
+          console.error('Error creating sale:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to create sale. Please try again.',
+            'Close',
+            { duration: 3000, panelClass: ['error-snackbar'] }
+          );
+        }
+      });
+  }
+
+  /**
+   * Edit existing sale
+   */
   editSale(sale: Sale): void {
     const dialogRef = this.dialog.open(AddSaleDialogComponent, {
       width: '700px',
@@ -134,20 +189,54 @@ export class SalesComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Update the sale in the data source
-        const index = this.dataSource.data.findIndex(s => s.id === sale.id);
-        if (index !== -1) {
-          this.dataSource.data[index] = { ...sale, ...result };
-          this.dataSource.data = [...this.dataSource.data];
-        }
-        console.log('Sale updated:', result);
+        this.updateSale(sale.id, result);
       }
     });
   }
 
+  /**
+   * Update sale
+   */
+  private updateSale(saleId: string, updates: Partial<Sale>): void {
+    this.loading = true;
+
+    this.salesService.updateSale(saleId, updates)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updatedSale) => {
+          // Update in table
+          const index = this.dataSource.data.findIndex(s => s.id === saleId);
+          if (index !== -1) {
+            const currentData = [...this.dataSource.data];
+            currentData[index] = updatedSale;
+            this.dataSource.data = currentData;
+          }
+
+          this.loading = false;
+          this.snackBar.open(
+            'Sale updated successfully',
+            'Close',
+            { duration: 3000, panelClass: ['success-snackbar'] }
+          );
+        },
+        error: (error) => {
+          console.error('Error updating sale:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to update sale. Please try again.',
+            'Close',
+            { duration: 3000, panelClass: ['error-snackbar'] }
+          );
+        }
+      });
+  }
+
+  /**
+   * Delete sale with confirmation
+   */
   deleteSale(sale: Sale): void {
     const saleDetails = [
-      `Customer: ${sale.customer}`,
+      `Customer: ${sale.customerName}`,
       `Product: ${sale.product}`,
       `Amount: $${sale.price * sale.quantity}`
     ];
@@ -158,14 +247,97 @@ export class SalesComponent implements AfterViewInit {
       saleDetails
     ).subscribe(confirmed => {
       if (confirmed) {
-        const index = this.dataSource.data.findIndex(s => s.id === sale.id);
-        if (index !== -1) {
-          const currentData = this.dataSource.data;
-          currentData.splice(index, 1);
-          this.dataSource.data = [...currentData];
-          console.log('Sale deleted:', sale);
-        }
+        this.performDelete(sale.id);
       }
     });
+  }
+
+  /**
+   * Perform actual deletion
+   */
+  private performDelete(saleId: string): void {
+    this.loading = true;
+
+    this.salesService.deleteSale(saleId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          // Remove from table
+          const currentData = this.dataSource.data.filter(s => s.id !== saleId);
+          this.dataSource.data = currentData;
+
+          this.loading = false;
+          this.snackBar.open(
+            'Sale deleted successfully',
+            'Close',
+            { duration: 3000, panelClass: ['success-snackbar'] }
+          );
+        },
+        error: (error) => {
+          console.error('Error deleting sale:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to delete sale. Please try again.',
+            'Close',
+            { duration: 3000, panelClass: ['error-snackbar'] }
+          );
+        }
+      });
+  }
+
+  /**
+   * Get status badge color
+   */
+  getStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'primary';
+      case 'pending':
+        return 'accent';
+      case 'processing':
+      case 'shipped':
+        return 'warn';
+      case 'cancelled':
+        return '';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Export sales data
+   */
+  exportSales(format: 'csv' | 'excel' | 'pdf'): void {
+    this.loading = true;
+
+    this.salesService.exportSales(format)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (blob) => {
+          // Create download link
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `sales_${new Date().toISOString().split('T')[0]}.${format}`;
+          link.click();
+          window.URL.revokeObjectURL(url);
+
+          this.loading = false;
+          this.snackBar.open(
+            'Sales exported successfully',
+            'Close',
+            { duration: 3000, panelClass: ['success-snackbar'] }
+          );
+        },
+        error: (error) => {
+          console.error('Error exporting sales:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to export sales. Please try again.',
+            'Close',
+            { duration: 3000, panelClass: ['error-snackbar'] }
+          );
+        }
+      });
   }
 }

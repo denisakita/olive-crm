@@ -18,18 +18,69 @@ export class SalesService {
   constructor(private api: ApiService) {}
 
   /**
+   * Transform backend sale data to frontend format
+   */
+  private transformSaleFromBackend(backendSale: any): Sale {
+    return {
+      id: backendSale.id,
+      customerName: backendSale.customer_name || backendSale.customer,
+      product: backendSale.product,
+      quantity: backendSale.quantity,
+      price: backendSale.price,
+      total: backendSale.total,
+      status: backendSale.status,
+      orderDate: new Date(backendSale.order_date),
+      deliveryDate: backendSale.delivery_date ? new Date(backendSale.delivery_date) : undefined,
+      paymentMethod: backendSale.payment_method,
+      notes: backendSale.notes,
+      discount: backendSale.discount,
+      tax: backendSale.tax,
+      shippingAddress: backendSale.shipping_address,
+      billingAddress: backendSale.billing_address
+    };
+  }
+
+  /**
+   * Transform frontend sale data to backend format
+   */
+  private transformSaleToBackend(sale: Partial<Sale>): any {
+    const backendSale: any = {};
+    
+    if (sale.id !== undefined) backendSale.id = sale.id;
+    if (sale.customerName !== undefined) backendSale.customer_name = sale.customerName;
+    if (sale.product !== undefined) backendSale.product = sale.product;
+    if (sale.quantity !== undefined) backendSale.quantity = sale.quantity;
+    if (sale.price !== undefined) backendSale.price = sale.price;
+    if (sale.total !== undefined) backendSale.total = sale.total;
+    if (sale.status !== undefined) backendSale.status = sale.status;
+    if (sale.orderDate !== undefined) backendSale.order_date = sale.orderDate instanceof Date ? sale.orderDate.toISOString() : sale.orderDate;
+    if (sale.deliveryDate !== undefined) backendSale.delivery_date = sale.deliveryDate instanceof Date ? sale.deliveryDate.toISOString() : sale.deliveryDate;
+    if (sale.paymentMethod !== undefined) backendSale.payment_method = sale.paymentMethod;
+    if (sale.notes !== undefined) backendSale.notes = sale.notes;
+    if (sale.discount !== undefined) backendSale.discount = sale.discount;
+    if (sale.tax !== undefined) backendSale.tax = sale.tax;
+    if (sale.shippingAddress !== undefined) backendSale.shipping_address = sale.shippingAddress;
+    if (sale.billingAddress !== undefined) backendSale.billing_address = sale.billingAddress;
+    
+    return backendSale;
+  }
+
+  /**
    * Get all sales with optional filters
    */
   getSales(params?: QueryParams): Observable<PaginatedResponse<Sale>> {
     this.loadingSubject.next(true);
     const endpoint = environment.endpoints.sales.list;
 
-    return this.api.getPaginated<Sale>(endpoint, params).pipe(
+    return this.api.getPaginated<any>(endpoint, params).pipe(
+      map(response => ({
+        ...response,
+        results: response.results.map((sale: any) => this.transformSaleFromBackend(sale))
+      })),
       tap(response => {
         this.salesSubject.next(response.results);
         this.loadingSubject.next(false);
-      }),
-      map(response => response)
+      })
     );
   }
 
@@ -38,7 +89,9 @@ export class SalesService {
    */
   getSale(id: string | number): Observable<Sale> {
     const endpoint = this.api.replaceParams(environment.endpoints.sales.detail, { id });
-    return this.api.get<Sale>(endpoint);
+    return this.api.get<any>(endpoint).pipe(
+      map(sale => this.transformSaleFromBackend(sale))
+    );
   }
 
   /**
@@ -46,7 +99,10 @@ export class SalesService {
    */
   createSale(sale: Partial<Sale>): Observable<Sale> {
     const endpoint = environment.endpoints.sales.create;
-    return this.api.post<Sale>(endpoint, sale).pipe(
+    const backendSale = this.transformSaleToBackend(sale);
+    
+    return this.api.post<any>(endpoint, backendSale).pipe(
+      map(response => this.transformSaleFromBackend(response)),
       tap(newSale => {
         const currentSales = this.salesSubject.value;
         this.salesSubject.next([...currentSales, newSale]);
@@ -59,7 +115,10 @@ export class SalesService {
    */
   updateSale(id: string | number, sale: Partial<Sale>): Observable<Sale> {
     const endpoint = this.api.replaceParams(environment.endpoints.sales.update, { id });
-    return this.api.put<Sale>(endpoint, sale).pipe(
+    const backendSale = this.transformSaleToBackend(sale);
+    
+    return this.api.put<any>(endpoint, backendSale).pipe(
+      map(response => this.transformSaleFromBackend(response)),
       tap(updatedSale => {
         const currentSales = this.salesSubject.value;
         const index = currentSales.findIndex(s => s.id === id);
@@ -76,7 +135,10 @@ export class SalesService {
    */
   patchSale(id: string | number, changes: Partial<Sale>): Observable<Sale> {
     const endpoint = this.api.replaceParams(environment.endpoints.sales.update, { id });
-    return this.api.patch<Sale>(endpoint, changes).pipe(
+    const backendChanges = this.transformSaleToBackend(changes);
+    
+    return this.api.patch<any>(endpoint, backendChanges).pipe(
+      map(response => this.transformSaleFromBackend(response)),
       tap(updatedSale => {
         const currentSales = this.salesSubject.value;
         const index = currentSales.findIndex(s => s.id === id);
