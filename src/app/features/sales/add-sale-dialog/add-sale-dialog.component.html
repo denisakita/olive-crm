@@ -117,7 +117,7 @@
     <div class="total-section">
       <div class="total-display">
         <span class="total-label">Total Amount:</span>
-        <span class="total-value">${{sale.total?.toFixed(2) || '0.00'}}</span>
+        <span class="total-value">${{(sale.total || 0).toFixed(2)}}</span>
       </div>
     </div>
   </div>

@@ -64,6 +64,14 @@ export class AddSaleDialogComponent {
   ) {
     if (data && data.sale) {
       this.sale = {...data.sale};
+      // Ensure numeric fields are numbers
+      this.sale.quantity = Number(this.sale.quantity) || 0;
+      this.sale.price = Number(this.sale.price) || 0;
+      this.sale.total = Number(this.sale.total) || 0;
+      this.sale.discount = Number(this.sale.discount) || 0;
+      this.sale.tax = Number(this.sale.tax) || 0;
+      // Recalculate total to ensure it's correct
+      this.calculateTotal();
     }
   }
 

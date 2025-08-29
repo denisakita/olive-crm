@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../shared/material.module';
-import {DatePipe, CurrencyPipe, TitleCasePipe} from '@angular/common';
+import {DatePipe, CurrencyPipe, TitleCasePipe, NgIf} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddSaleDialogComponent } from './add-sale-dialog/add-sale-dialog.component';
 import { DialogService } from '../../shared/services/dialog.service';
@@ -22,7 +22,8 @@ import { takeUntil } from 'rxjs/operators';
     DatePipe,
     CurrencyPipe,
     FormsModule,
-    TitleCasePipe
+    TitleCasePipe,
+    NgIf
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss'
@@ -106,12 +107,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  /**
-   * Refresh sales data
-   */
-  refreshSales(): void {
-    this.loadSales();
-  }
 
   applyFilter() {
     const filters = {
@@ -154,11 +149,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (newSale) => {
-          // Add to table
-          const currentData = this.dataSource.data;
-          this.dataSource.data = [...currentData, newSale];
-
-          this.loading = false;
+          // Reload all sales to ensure consistency
+          this.loadSales();
+          
           this.snackBar.open(
             'Sale created successfully',
             'Close',
@@ -204,15 +197,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updatedSale) => {
-          // Update in table
-          const index = this.dataSource.data.findIndex(s => s.id === saleId);
-          if (index !== -1) {
-            const currentData = [...this.dataSource.data];
-            currentData[index] = updatedSale;
-            this.dataSource.data = currentData;
-          }
-
-          this.loading = false;
+          // Reload all sales to ensure consistency
+          this.loadSales();
+          
           this.snackBar.open(
             'Sale updated successfully',
             'Close',
@@ -262,11 +249,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Remove from table
-          const currentData = this.dataSource.data.filter(s => s.id !== saleId);
-          this.dataSource.data = currentData;
-
-          this.loading = false;
+          // Reload all sales to ensure consistency
+          this.loadSales();
+          
           this.snackBar.open(
             'Sale deleted successfully',
             'Close',
