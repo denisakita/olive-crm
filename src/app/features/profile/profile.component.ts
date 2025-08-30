@@ -2,11 +2,11 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {DatePipe, NgIf} from '@angular/common';
 import {MaterialModule} from '../../shared/material.module';
-import {AuthService} from '../../core/services/auth.service';
+import {AuthService} from '../../auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {Profile} from '../../models/profile.interface';
+import {Profile} from '../../shared/models/profile.interface';
 
 @Component({
   selector: 'app-profile',

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../core/services/auth.service';
+import {AuthService} from '../auth.service';
 import {MATERIAL_COMMON_MODULES, MATERIAL_FORM_MODULES} from '../../shared/material.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     const encodedPassword = localStorage.getItem('savedPassword');
     const savedPassword = encodedPassword ? atob(encodedPassword) : ''; // Decode base64
     const rememberMe = localStorage.getItem('rememberCredentials') === 'true';
-    
+
     this.loginForm = this.fb.group({
       username: [savedUsername || '', [Validators.required]],
       password: [savedPassword || '', [Validators.required, Validators.minLength(6)]],
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     const credentials = this.loginForm.value;
-    
+
     // Save or clear credentials based on Remember Me checkbox
     if (credentials.rememberMe) {
       // Save credentials for next time (encode password for minimal security)

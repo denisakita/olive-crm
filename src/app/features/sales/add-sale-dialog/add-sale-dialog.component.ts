@@ -3,8 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MaterialModule} from '../../../shared/material.module';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {Sale} from '../../../models/sale.interface';
-import {SalesService} from '../../../core/services/sales.service';
+import {Sale} from '../../../shared/models/sale.interface';
+import {SalesService} from '../../../shared/services/sales.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 

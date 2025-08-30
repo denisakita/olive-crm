@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../environments/environment';
 import {
   AuthState,
   ChangePasswordRequest,
@@ -16,8 +16,8 @@ import {
   RegisterResponse,
   TokenRefreshResponse,
   User
-} from '../../models/auth.interface';
-import { Profile } from '../../models/profile.interface';
+} from '../shared/models/auth.interface';
+import { Profile } from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -261,7 +261,7 @@ export class AuthService {
       sessionStorage.setItem(this.TOKEN_KEY, response.access);
       sessionStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
       sessionStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
-      
+
       // Clear any existing localStorage to ensure session-only
       localStorage.removeItem(this.TOKEN_KEY);
       localStorage.removeItem(this.REFRESH_TOKEN_KEY);
@@ -394,7 +394,7 @@ export class AuthService {
     if (stateToken) {
       return stateToken;
     }
-    
+
     // Otherwise check storages (localStorage first for persistent, then sessionStorage)
     return localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
   }

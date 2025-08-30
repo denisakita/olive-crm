@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiService, PaginatedResponse, QueryParams } from './api.service';
-import { Sale, SalesSummary } from '../../models/sale.interface';
+import { Sale, SalesSummary } from '../models/sale.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -45,7 +45,7 @@ export class SalesService {
    */
   private transformSaleToBackend(sale: Partial<Sale>): any {
     const backendSale: any = {};
-    
+
     if (sale.id !== undefined) backendSale.id = sale.id;
     if (sale.customerName !== undefined) backendSale.customer_name = sale.customerName;
     if (sale.product !== undefined) backendSale.product = sale.product;
@@ -61,7 +61,7 @@ export class SalesService {
     if (sale.tax !== undefined) backendSale.tax = sale.tax;
     if (sale.shippingAddress !== undefined) backendSale.shipping_address = sale.shippingAddress;
     if (sale.billingAddress !== undefined) backendSale.billing_address = sale.billingAddress;
-    
+
     return backendSale;
   }
 
@@ -100,7 +100,7 @@ export class SalesService {
   createSale(sale: Partial<Sale>): Observable<Sale> {
     const endpoint = environment.endpoints.sales.create;
     const backendSale = this.transformSaleToBackend(sale);
-    
+
     return this.api.post<any>(endpoint, backendSale).pipe(
       map(response => this.transformSaleFromBackend(response)),
       tap(newSale => {
@@ -116,7 +116,7 @@ export class SalesService {
   updateSale(id: string | number, sale: Partial<Sale>): Observable<Sale> {
     const endpoint = this.api.replaceParams(environment.endpoints.sales.update, { id });
     const backendSale = this.transformSaleToBackend(sale);
-    
+
     return this.api.put<any>(endpoint, backendSale).pipe(
       map(response => this.transformSaleFromBackend(response)),
       tap(updatedSale => {
@@ -136,7 +136,7 @@ export class SalesService {
   patchSale(id: string | number, changes: Partial<Sale>): Observable<Sale> {
     const endpoint = this.api.replaceParams(environment.endpoints.sales.update, { id });
     const backendChanges = this.transformSaleToBackend(changes);
-    
+
     return this.api.patch<any>(endpoint, backendChanges).pipe(
       map(response => this.transformSaleFromBackend(response)),
       tap(updatedSale => {

@@ -9,11 +9,11 @@ import {DatePipe, CurrencyPipe, TitleCasePipe, NgIf} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddSaleDialogComponent } from './add-sale-dialog/add-sale-dialog.component';
 import { DialogService } from '../../shared/services/dialog.service';
-import { SalesService } from '../../core/services/sales.service';
-import { Sale } from '../../models/sale.interface';
+import { SalesService } from '../../shared/services/sales.service';
+import { Sale } from '../../shared/models/sale.interface';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { QueryParams } from '../../core/services/api.service';
+import { QueryParams } from '../../shared/services/api.service';
 
 @Component({
   selector: 'app-sales',
@@ -77,7 +77,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // Connect sort to the data source for UI feedback
     this.dataSource.sort = this.sort;
-    
+
     // Handle sort changes for backend call
     this.sort.sortChange
       .pipe(takeUntil(this.destroy$))
@@ -142,7 +142,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         'date': 'order_date',
         'status': 'status'
       };
-      
+
       const backendField = fieldMapping[this.sortActive] || this.sortActive;
       params['ordering'] = this.sortDirection === 'desc' ? `-${backendField}` : backendField;
     }
@@ -153,13 +153,13 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (response) => {
           this.dataSource.data = response.results;
           this.totalItems = response.count;
-          
+
           // Update paginator
           if (this.paginator) {
             this.paginator.length = response.count;
             this.paginator.pageIndex = this.pageIndex;
           }
-          
+
           this.loading = false;
         },
         error: (error) => {
@@ -228,7 +228,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (newSale) => {
           // Reload all sales to ensure consistency
           this.loadSales();
-          
+
           this.snackBar.open(
             'Sale created successfully',
             'Close',
@@ -276,7 +276,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (updatedSale) => {
           // Reload all sales to ensure consistency
           this.loadSales();
-          
+
           this.snackBar.open(
             'Sale updated successfully',
             'Close',
@@ -328,7 +328,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         next: () => {
           // Reload all sales to ensure consistency
           this.loadSales();
-          
+
           this.snackBar.open(
             'Sale deleted successfully',
             'Close',

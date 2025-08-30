@@ -8,7 +8,7 @@ import {
   MatToolbarModule
 } from '../../material.module';
 import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../../core/services/auth.service';
+import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-header',
