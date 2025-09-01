@@ -5,7 +5,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   phone_number?: string;
-  phone?: string; // alias for phone_number
+  phone?: string;
   role?: string;
   department?: string;
   location?: string;
@@ -22,40 +22,4 @@ export interface User {
   isSuperuser?: boolean;
 }
 
-export interface LoginCredentials {
-  username: string;
-  password: string;
-  rememberMe?: boolean;
-}
 
-export interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName?: string;
-  lastName?: string;
-  acceptTerms?: boolean;
-}
-
-export interface TokenResponse {
-  access: string;
-  refresh: string;
-  user?: User;
-}
-
-export interface PasswordResetRequest {
-  email: string;
-}
-
-export interface PasswordResetConfirm {
-  token: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface PasswordChange {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
