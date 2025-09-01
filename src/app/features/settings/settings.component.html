@@ -1,7 +1,7 @@
 <div class="settings-container">
   <div class="settings-header">
     <h1>Settings</h1>
-    <p class="subtitle">Manage your application preferences and configuration</p>
+    <mat-spinner *ngIf="loading" diameter="30" style="margin: 20px auto; display: block;"></mat-spinner>
   </div>
 
   <div class="settings-content">
@@ -59,8 +59,11 @@
           </mat-form-field>
         </div>
 
-        <button mat-raised-button color="primary" (click)="saveGeneralSettings()">
-          <mat-icon>save</mat-icon>
+        <button mat-raised-button color="primary" (click)="saveGeneralSettings()"
+                [disabled]="loadingSection === 'general'">
+          <mat-spinner *ngIf="loadingSection === 'general'" diameter="20"
+                       style="display: inline-block; margin-right: 8px;"></mat-spinner>
+          <mat-icon *ngIf="loadingSection !== 'general'">save</mat-icon>
           Save General Settings
         </button>
       </div>
@@ -109,8 +112,11 @@
           </mat-slide-toggle>
         </div>
 
-        <button mat-raised-button color="primary" (click)="saveNotificationSettings()">
-          <mat-icon>save</mat-icon>
+        <button mat-raised-button color="primary" (click)="saveNotificationSettings()"
+                [disabled]="loadingSection === 'notifications'">
+          <mat-spinner *ngIf="loadingSection === 'notifications'" diameter="20"
+                       style="display: inline-block; margin-right: 8px;"></mat-spinner>
+          <mat-icon *ngIf="loadingSection !== 'notifications'">save</mat-icon>
           Save Notification Settings
         </button>
       </div>
@@ -151,12 +157,15 @@
           </mat-form-field>
         </div>
 
-        <button mat-raised-button color="primary" (click)="saveSecuritySettings()">
-          <mat-icon>save</mat-icon>
+        <button mat-raised-button color="primary" (click)="saveSecuritySettings()"
+                [disabled]="loadingSection === 'security'">
+          <mat-spinner *ngIf="loadingSection === 'security'" diameter="20"
+                       style="display: inline-block; margin-right: 8px;"></mat-spinner>
+          <mat-icon *ngIf="loadingSection !== 'security'">save</mat-icon>
           Save Security Settings
         </button>
 
-        <button mat-raised-button color="warn" class="change-password-btn">
+        <button mat-raised-button color="warn" class="change-password-btn" (click)="changePassword()">
           <mat-icon>lock</mat-icon>
           Change Password
         </button>
@@ -174,7 +183,7 @@
       <div class="settings-section">
         <mat-form-field appearance="outline">
           <mat-label>Theme</mat-label>
-          <mat-select [(ngModel)]="display.theme">
+          <mat-select [(ngModel)]="display.theme" (selectionChange)="onThemeChange()">
             <mat-option value="light">Light</mat-option>
             <mat-option value="dark">Dark</mat-option>
             <mat-option value="auto">Auto (System)</mat-option>
@@ -201,8 +210,11 @@
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="saveDisplaySettings()">
-          <mat-icon>save</mat-icon>
+        <button mat-raised-button color="primary" (click)="saveDisplaySettings()"
+                [disabled]="loadingSection === 'display'">
+          <mat-spinner *ngIf="loadingSection === 'display'" diameter="20"
+                       style="display: inline-block; margin-right: 8px;"></mat-spinner>
+          <mat-icon *ngIf="loadingSection !== 'display'">save</mat-icon>
           Save Display Settings
         </button>
       </div>
@@ -216,19 +228,21 @@
 
       <div class="settings-section">
         <div class="data-actions">
-          <button mat-raised-button (click)="exportData()">
-            <mat-icon>cloud_download</mat-icon>
+          <button mat-raised-button (click)="exportData()" [disabled]="loadingSection === 'export'">
+            <mat-spinner *ngIf="loadingSection === 'export'" diameter="20"
+                         style="display: inline-block; margin-right: 8px;"></mat-spinner>
+            <mat-icon *ngIf="loadingSection !== 'export'">cloud_download</mat-icon>
             Export Data
           </button>
 
-          <button mat-raised-button>
+          <button mat-raised-button [disabled]="true">
             <mat-icon>cloud_upload</mat-icon>
-            Import Data
+            Import Data (Coming Soon)
           </button>
 
-          <button mat-raised-button>
+          <button mat-raised-button [disabled]="true">
             <mat-icon>backup</mat-icon>
-            Backup Settings
+            Backup Settings (Coming Soon)
           </button>
 
           <button mat-raised-button color="warn" (click)="clearCache()">

@@ -225,3 +225,290 @@ body {
 .cdk-overlay-container:empty {
   display: none !important;
 }
+
+/* Dark Theme Mixin */
+@mixin dark-theme-styles {
+  --text-primary: #f5f5f5;
+  --text-secondary: #b0b0b0;
+  --background-primary: #1a1a1a;
+  --background-secondary: #2d2d2d;
+  --accent: var(--earth-yellow);
+  --warn: var(--tigers-eye);
+  --success: #4caf50;
+  --info: var(--moss-green);
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  
+  /* Material components dark theme overrides */
+  .mat-toolbar {
+    background-color: #212121 !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-sidenav {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-sidenav-content {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-card {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+  }
+  
+  .mat-expansion-panel {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    
+    .mat-expansion-panel-header {
+      background-color: var(--background-secondary) !important;
+      color: var(--text-primary) !important;
+      
+      &:hover {
+        background-color: #3a3a3a !important;
+      }
+    }
+  }
+  
+  .mat-form-field {
+    .mat-form-field-label {
+      color: var(--text-secondary) !important;
+    }
+    
+    .mat-form-field-underline {
+      background-color: var(--border-color) !important;
+    }
+    
+    .mat-input-element {
+      color: var(--text-primary) !important;
+      caret-color: var(--text-primary) !important;
+    }
+    
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-outline {
+        color: var(--border-color) !important;
+      }
+      
+      .mat-form-field-outline-thick {
+        color: var(--accent) !important;
+      }
+    }
+  }
+  
+  .mat-select {
+    .mat-select-value {
+      color: var(--text-primary) !important;
+    }
+    
+    .mat-select-arrow {
+      color: var(--text-secondary) !important;
+    }
+  }
+  
+  .mat-option {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    
+    &:hover {
+      background-color: #3a3a3a !important;
+    }
+    
+    &.mat-selected {
+      background-color: rgba(96, 108, 56, 0.2) !important;
+    }
+  }
+  
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+    &:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+      color: var(--text-primary) !important;
+    }
+  }
+  
+  .mat-slide-toggle {
+    .mat-slide-toggle-content {
+      color: var(--text-primary) !important;
+    }
+  }
+  
+  .mat-divider {
+    background-color: var(--border-color) !important;
+  }
+  
+  .mat-list-item {
+    color: var(--text-primary) !important;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    &.active-link {
+      background-color: rgba(96, 108, 56, 0.2) !important;
+    }
+  }
+  
+  .mat-menu-panel {
+    background-color: var(--background-secondary) !important;
+    
+    .mat-menu-item {
+      color: var(--text-primary) !important;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+    }
+  }
+  
+  .mat-table {
+    background-color: var(--background-secondary) !important;
+    
+    .mat-header-cell {
+      color: var(--text-primary) !important;
+      border-bottom-color: var(--border-color) !important;
+    }
+    
+    .mat-cell {
+      color: var(--text-primary) !important;
+      border-bottom-color: var(--border-color) !important;
+    }
+    
+    .mat-row:hover {
+      background-color: rgba(255, 255, 255, 0.03) !important;
+    }
+  }
+  
+  .mat-paginator {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-tab-group {
+    .mat-tab-label {
+      color: var(--text-secondary) !important;
+      
+      &.mat-tab-label-active {
+        color: var(--text-primary) !important;
+      }
+    }
+  }
+  
+  .mat-dialog-container {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-snack-bar-container {
+    background-color: #424242 !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-progress-spinner circle,
+  .mat-spinner circle {
+    stroke: var(--accent) !important;
+  }
+  
+  .mat-progress-bar {
+    .mat-progress-bar-buffer {
+      background-color: rgba(96, 108, 56, 0.2) !important;
+    }
+    
+    .mat-progress-bar-fill::after {
+      background-color: var(--dark-moss-green) !important;
+    }
+  }
+  
+  /* Custom component styles for dark theme */
+  .settings-container {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    
+    .settings-header {
+      h1 {
+        color: var(--text-primary) !important;
+      }
+      
+      .subtitle {
+        color: var(--text-secondary) !important;
+      }
+    }
+    
+    .settings-section {
+      background-color: var(--background-secondary) !important;
+      
+      h3 {
+        color: var(--text-primary) !important;
+      }
+    }
+    
+    .storage-info {
+      p {
+        color: var(--text-primary) !important;
+      }
+    }
+  }
+  
+  .profile-container {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    
+    .profile-header {
+      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%) !important;
+      
+      h1, h2 {
+        color: var(--text-primary) !important;
+      }
+    }
+  }
+  
+  /* Dashboard cards */
+  .dashboard-card {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+  }
+  
+  /* Scrollbar styling for dark theme */
+  ::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #555;
+    
+    &:hover {
+      background: #666;
+    }
+  }
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+  @include dark-theme-styles;
+}
+
+/* Light Theme (explicit) */
+body.light-theme {
+  background-color: #fafafa;
+  color: var(--text-primary);
+}
+
+/* Auto Theme - follows system preference */
+@media (prefers-color-scheme: dark) {
+  body.auto-theme {
+    @include dark-theme-styles;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body.auto-theme {
+    background-color: #fafafa;
+    color: var(--text-primary);
+  }
+}
