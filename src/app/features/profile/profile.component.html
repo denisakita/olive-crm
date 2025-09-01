@@ -1,14 +1,21 @@
 <div class="profile-container">
-  <div class="profile-header">
-    <div>
-      <h1>User Profile</h1>
-      <p class="subtitle">Manage your personal information and preferences</p>
-    </div>
-    <button mat-raised-button color="primary" (click)="toggleEdit()" *ngIf="!isEditing">
-      <mat-icon>edit</mat-icon>
-      Edit Profile
-    </button>
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
   </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading && user">
+    <div class="profile-header">
+      <div>
+        <h1>User Profile</h1>
+        <p class="subtitle">Manage your personal information and preferences</p>
+      </div>
+      <button mat-raised-button color="primary" (click)="toggleEdit()" *ngIf="!isEditing" [disabled]="loading">
+        <mat-icon>edit</mat-icon>
+        Edit Profile
+      </button>
+    </div>
 
   <div class="profile-content">
     <mat-card class="profile-card">
@@ -17,20 +24,20 @@
           <div class="avatar">
             <mat-icon>account_circle</mat-icon>
           </div>
-          <button mat-button color="primary" class="avatar-change-btn" *ngIf="isEditing">
+          <button mat-button color="primary" class="avatar-change-btn" *ngIf="isEditing" (click)="uploadAvatar()">
             <mat-icon>photo_camera</mat-icon>
             Change Photo
           </button>
         </div>
         <div class="header-info">
-          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
-          <p class="role-info">{{ user.role }} • {{ user.department }}</p>
+          <h2>{{ user.firstName || user.username }} {{ user.lastName || '' }}</h2>
+          <p class="role-info">{{ user.role || 'User' }} {{ user.department ? '• ' + user.department : '' }}</p>
           <div class="contact-badges">
             <span class="badge">
               <mat-icon>email</mat-icon>
               {{ user.email }}
             </span>
-            <span class="badge">
+            <span class="badge" *ngIf="user.phone">
               <mat-icon>phone</mat-icon>
               {{ user.phone }}
             </span>
@@ -57,7 +64,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline">
               <mat-label>Email</mat-label>
-              <input matInput type="email" [(ngModel)]="user.email">
+              <input matInput type="email" [(ngModel)]="user.email" [disabled]="true">
               <mat-icon matPrefix>email</mat-icon>
             </mat-form-field>
 
@@ -89,11 +96,11 @@
           </mat-form-field>
 
           <div class="form-actions">
-            <button mat-raised-button color="primary" (click)="saveProfile()">
+            <button mat-raised-button color="primary" (click)="saveProfile()" [disabled]="loading">
               <mat-icon>save</mat-icon>
               Save Changes
             </button>
-            <button mat-button (click)="cancelEdit()">
+            <button mat-button (click)="cancelEdit()" [disabled]="loading">
               Cancel
             </button>
           </div>
@@ -105,11 +112,11 @@
             <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">First Name</span>
-                <span class="info-value">{{ user.firstName }}</span>
+                <span class="info-value">{{ user.firstName || '-' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Last Name</span>
-                <span class="info-value">{{ user.lastName }}</span>
+                <span class="info-value">{{ user.lastName || '-' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Email Address</span>
@@ -117,7 +124,7 @@
               </div>
               <div class="info-item">
                 <span class="info-label">Phone Number</span>
-                <span class="info-value">{{ user.phone }}</span>
+                <span class="info-value">{{ user.phone || '-' }}</span>
               </div>
             </div>
           </div>
@@ -129,19 +136,19 @@
             <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">Role</span>
-                <span class="info-value">{{ user.role }}</span>
+                <span class="info-value">{{ user.role || 'User' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Department</span>
-                <span class="info-value">{{ user.department }}</span>
+                <span class="info-value">{{ user.department || '-' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Location</span>
-                <span class="info-value">{{ user.location }}</span>
+                <span class="info-value">{{ user.location || '-' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Join Date</span>
-                <span class="info-value">{{ user.joinDate | date:'longDate' }}</span>
+                <span class="info-value">{{ user.dateJoined ? (user.dateJoined | date:'longDate') : '-' }}</span>
               </div>
             </div>
           </div>
@@ -150,7 +157,23 @@
 
           <div class="bio-section">
             <h3 class="section-title">About Me</h3>
-            <p>{{ user.bio }}</p>
+            <p>{{ user.bio || 'No bio provided.' }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="security-section">
+            <h3 class="section-title">Security</h3>
+            <div class="security-actions">
+              <button mat-stroked-button color="primary" (click)="changePassword()">
+                <mat-icon>lock</mat-icon>
+                Change Password
+              </button>
+              <p class="security-info">
+                <mat-icon>info</mat-icon>
+                Keep your account secure by changing your password regularly
+              </p>
+            </div>
           </div>
         </div>
       </mat-card-content>
@@ -192,5 +215,16 @@
         </div>
       </mat-card-content>
     </mat-card>
+    </div>
+  </div>
+
+  <!-- No User Found -->
+  <div *ngIf="!loading && !user" class="no-data">
+    <mat-icon>error_outline</mat-icon>
+    <p>Unable to load profile data</p>
+    <button mat-raised-button color="primary" (click)="loadProfile()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
   </div>
 </div>

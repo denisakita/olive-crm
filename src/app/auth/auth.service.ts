@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../environments/environment';
 import {
   AuthState,
   ChangePasswordRequest,
@@ -11,12 +11,11 @@ import {
   LoginRequest,
   LoginResponse,
   PasswordResetConfirm,
-  PasswordResetRequest,
   RegisterRequest,
   RegisterResponse,
   TokenRefreshResponse,
   User
-} from '../../models/auth.interface';
+} from '../shared/models/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -50,12 +49,13 @@ export class AuthService {
   }
 
   /**
-   * Load authentication data from localStorage
+   * Load authentication data from localStorage or sessionStorage
    */
   private loadStoredAuth(): void {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    const userJson = localStorage.getItem(this.USER_KEY);
+    // Check localStorage first (persistent), then sessionStorage (session-only)
+    let token = localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
+    let refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY) || sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+    let userJson = localStorage.getItem(this.USER_KEY) || sessionStorage.getItem(this.USER_KEY);
 
     if (token && userJson) {
       try {
@@ -140,19 +140,24 @@ export class AuthService {
     const url = `${environment.apiUrl}${environment.endpoints.auth.logout}`;
     const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
 
-    // Clear local auth immediately
-    this.clearAuth();
-
-    // Notify server if we have a refresh token
+    // Notify server first (while we still have the auth token)
     if (refreshToken) {
       return this.http.post(url, {refresh: refreshToken}).pipe(
-        catchError(() => {
-          // Ignore logout errors, already cleared locally
+        tap(() => {
+          // Clear local auth after successful logout
+          this.clearAuth();
+        }),
+        catchError((error) => {
+          // Clear auth even if server logout fails
+          this.clearAuth();
+          // Return success since local logout is complete
           return of(null);
         })
       );
     }
 
+    // If no refresh token, just clear local auth
+    this.clearAuth();
     return of(null);
   }
 
@@ -215,11 +220,35 @@ export class AuthService {
   }
 
   /**
-   * Request password reset
+   * Request password reset - sends reset email
    */
-  requestPasswordReset(data: PasswordResetRequest): Observable<any> {
-    const url = `${environment.apiUrl}/auth/password-reset/`;
-    return this.http.post(url, data);
+  requestPasswordReset(email: string): Observable<any> {
+    const url = `${environment.apiUrl}${environment.endpoints.auth.passwordReset}`;
+    return this.http.post(url, {email}).pipe(
+      catchError(error => {
+        console.error('Password reset request error:', error);
+        // Always return success for security reasons
+        return of({message: 'If the email exists, a password reset link has been sent.'});
+      })
+    );
+  }
+
+  /**
+   * Reset password with token
+   */
+  resetPassword(token: string, uid: string, password: string): Observable<any> {
+    const url = `${environment.apiUrl}${environment.endpoints.auth.passwordResetConfirm}`;
+    return this.http.post(url, {
+      token,
+      uid,
+      password: password,
+      confirmPassword: password
+    }).pipe(
+      catchError(error => {
+        console.error('Password reset error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -234,7 +263,7 @@ export class AuthService {
    * Change password
    */
   changePassword(data: ChangePasswordRequest): Observable<any> {
-    const url = `${environment.apiUrl}/auth/change-password/`;
+    const url = `${environment.apiUrl}${environment.endpoints.auth.changePassword}`;
     return this.http.post(url, data);
   }
 
@@ -242,16 +271,23 @@ export class AuthService {
    * Handle login response
    */
   private handleLoginResponse(response: LoginResponse, rememberMe?: boolean): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
-
-    storage.setItem(this.TOKEN_KEY, response.access);
-    storage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
-    storage.setItem(this.USER_KEY, JSON.stringify(response.user));
-
-    // Also set in localStorage for token persistence
-    if (!rememberMe) {
+    // If rememberMe is true, use localStorage (persistent)
+    // If rememberMe is false, use sessionStorage (closes with browser)
+    if (rememberMe) {
+      // Persistent storage - survives browser close
       localStorage.setItem(this.TOKEN_KEY, response.access);
       localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+    } else {
+      // Session storage - cleared when browser closes
+      sessionStorage.setItem(this.TOKEN_KEY, response.access);
+      sessionStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh);
+      sessionStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+
+      // Clear any existing localStorage to ensure session-only
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+      localStorage.removeItem(this.USER_KEY);
     }
 
     this.updateAuthState({
@@ -346,9 +382,10 @@ export class AuthService {
   }
 
   /**
-   * Clear authentication data
+   * Clear authentication data from both storages
    */
   private clearAuth(): void {
+    // Clear from both localStorage and sessionStorage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
@@ -370,12 +407,6 @@ export class AuthService {
     });
   }
 
-  /**
-   * Get current token
-   */
-  getToken(): string | null {
-    return this.authStateSubject.value.token;
-  }
 
   /**
    * Get current user

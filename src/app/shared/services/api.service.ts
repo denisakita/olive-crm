@@ -46,6 +46,10 @@ export class ApiService {
   private getUrl(endpoint: string): string {
     // Remove leading slash if present
     endpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+    // Check if apiUrl already includes version
+    if (this.baseUrl.includes('/v1')) {
+      return `${this.baseUrl}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    }
     return `${this.baseUrl}/${this.apiVersion}/${endpoint}`;
   }
 

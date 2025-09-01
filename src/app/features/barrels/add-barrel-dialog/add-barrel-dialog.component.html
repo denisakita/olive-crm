@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>
+  <mat-icon>storage</mat-icon>
+  Add New Barrel
+</h2>
+
+<mat-dialog-content>
+  <div class="dialog-form">
+    <form [formGroup]="barrelForm">
+      <div class="form-section">
+        <h3>Barrel Identification</h3>
+        <div class="form-row two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Barrel Number</mat-label>
+            <input matInput formControlName="barrel_number" placeholder="Enter barrel number">
+            <mat-icon matPrefix>tag</mat-icon>
+            <mat-error *ngIf="barrelForm.get('barrel_number')?.hasError('required')">
+              Barrel number is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="Enter location">
+            <mat-icon matPrefix>place</mat-icon>
+            <mat-error *ngIf="barrelForm.get('location')?.hasError('required')">
+              Location is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="form-section">
+        <h3>Capacity & Volume</h3>
+        <div class="form-row two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Capacity (Liters)</mat-label>
+            <input matInput type="number" formControlName="capacity" placeholder="0" step="0.1">
+            <mat-icon matPrefix>inventory</mat-icon>
+            <mat-error *ngIf="barrelForm.get('capacity')?.hasError('required')">
+              Capacity is required
+            </mat-error>
+            <mat-error *ngIf="barrelForm.get('capacity')?.hasError('min')">
+              Capacity must be greater than 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Current Volume (Liters)</mat-label>
+            <input matInput type="number" formControlName="current_volume" placeholder="0" step="0.1">
+            <mat-icon matPrefix>local_drink</mat-icon>
+            <mat-error *ngIf="barrelForm.get('current_volume')?.hasError('required')">
+              Current volume is required
+            </mat-error>
+            <mat-error *ngIf="barrelForm.get('current_volume')?.hasError('min')">
+              Current volume cannot be negative
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="form-section">
+        <h3>Additional Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Notes</mat-label>
+            <textarea matInput formControlName="notes" placeholder="Enter any notes (optional)" rows="3"></textarea>
+            <mat-icon matPrefix>note</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!isFormValid" (click)="onSave()">
+    <mat-icon>save</mat-icon>
+    Add Barrel
+  </button>
+</mat-dialog-actions>

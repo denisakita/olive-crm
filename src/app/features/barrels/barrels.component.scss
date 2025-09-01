@@ -2,25 +2,25 @@
   padding: 24px;
   min-height: calc(100vh - 64px);
   overflow-x: hidden;
-  
+
   .barrels-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 32px;
-    
+
     h1 {
       margin: 0;
       font-size: 32px;
       font-weight: 500;
     }
-    
+
     .subtitle {
       margin: 4px 0 0 0;
       color: var(--text-secondary);
       font-size: 16px;
     }
-    
+
     .add-barrel-btn {
       position: fixed;
       bottom: 32px;
@@ -28,40 +28,40 @@
       z-index: 100;
     }
   }
-  
+
   .barrels-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 32px;
     width: 100%;
-    
+
     .stat-card {
       display: flex;
       align-items: center;
       padding: 20px;
-      
+
       mat-icon {
         font-size: 48px;
         width: 48px;
         height: 48px;
         margin-right: 16px;
-        
+
         &.success-icon {
           color: var(--success);
         }
       }
-      
+
       .stat-info {
         display: flex;
         flex-direction: column;
-        
+
         .stat-value {
           font-size: 28px;
           font-weight: 600;
           color: var(--text-primary);
         }
-        
+
         .stat-label {
           font-size: 14px;
           color: var(--text-secondary);
@@ -71,42 +71,42 @@
       }
     }
   }
-  
+
   .barrels-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 20px;
     width: 100%;
     padding-bottom: 80px; // Space for FAB button
-    
+
     .barrel-card {
       transition: transform 0.2s, box-shadow 0.2s;
       overflow: hidden;
-      
+
       &:hover {
         transform: translateY(-4px);
         box-shadow: 0 4px 20px var(--shadow-color);
       }
-      
+
       mat-card-header {
         position: relative;
-        
+
         .status-chip {
           position: absolute;
           top: 16px;
           right: 16px;
         }
       }
-      
+
       .barrel-info {
         margin: 16px 0;
-        
+
         .info-row {
           display: flex;
           align-items: center;
           margin-bottom: 12px;
           color: var(--text-secondary);
-          
+
           mat-icon {
             font-size: 20px;
             width: 20px;
@@ -114,13 +114,13 @@
             margin-right: 12px;
             color: var(--dark-moss-green);
           }
-          
+
           span {
             font-size: 14px;
           }
         }
       }
-      
+
       .volume-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -129,30 +129,30 @@
         padding: 16px;
         background-color: var(--cornsilk);
         border-radius: 8px;
-        
+
         .volume-item {
           display: flex;
           align-items: center;
           gap: 12px;
-          
+
           mat-icon {
             font-size: 32px;
             width: 32px;
             height: 32px;
             color: var(--dark-moss-green);
           }
-          
+
           .volume-detail {
             display: flex;
             flex-direction: column;
-            
+
             .volume-label {
               font-size: 12px;
               color: var(--text-secondary);
               text-transform: uppercase;
               letter-spacing: 0.5px;
             }
-            
+
             .volume-value {
               font-size: 16px;
               font-weight: 600;
@@ -161,12 +161,12 @@
           }
         }
       }
-      
+
       .capacity-section {
         margin-top: 20px;
         padding-top: 16px;
         border-top: 1px solid var(--border-color);
-        
+
         .capacity-header {
           display: flex;
           justify-content: space-between;
@@ -174,11 +174,11 @@
           font-size: 14px;
           color: var(--text-secondary);
         }
-        
+
         mat-progress-bar {
           border-radius: 4px;
         }
-        
+
         .capacity-percentage {
           display: block;
           text-align: center;
@@ -187,7 +187,7 @@
           color: var(--text-secondary);
         }
       }
-      
+
       .barrel-actions {
         display: flex;
         justify-content: space-around;
@@ -196,10 +196,10 @@
         margin: 16px -16px -16px;
         background-color: var(--cornsilk);
         overflow: hidden;
-        
+
         button {
           font-size: 13px;
-          
+
           mat-icon {
             margin-right: 4px;
             font-size: 18px;
@@ -209,5 +209,161 @@
         }
       }
     }
+  }
+
+  .filters-card {
+    margin-bottom: 24px;
+
+    .filters-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      flex-wrap: wrap;
+
+      .search-field {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .filter-field {
+        min-width: 150px;
+      }
+
+      button {
+        margin: 0 4px;
+
+        &[mat-button] {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  .barrels-table-card {
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+
+      &.loading {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .barrels-table {
+        width: 100%;
+
+        .barrel-id {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          mat-icon {
+            color: var(--dark-moss-green);
+          }
+        }
+
+        .utilization-cell {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          mat-progress-bar {
+            flex: 1;
+            border-radius: 4px;
+          }
+
+          .percentage {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 40px;
+            text-align: right;
+          }
+        }
+
+        .status-badge {
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 500;
+          text-transform: uppercase;
+
+          &.status-full {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+          }
+
+          &.status-partial {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: #FF9800;
+          }
+
+          &.status-empty {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+          }
+        }
+
+        .location-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          mat-icon {
+            color: var(--text-secondary);
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        .action-buttons {
+          display: flex;
+          align-items: center;
+
+          button[mat-icon-button] {
+            color: var(--text-secondary);
+          }
+        }
+      }
+
+      .no-data {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-secondary);
+
+        mat-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          margin-bottom: 16px;
+          opacity: 0.5;
+        }
+
+        p {
+          margin: 0 0 20px 0;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 }

@@ -1,7 +1,6 @@
-import { Routes } from '@angular/router';
-import { MainLayout } from './layout/main-layout/main-layout';
-import { AuthGuard } from './core/guards/auth.guard';
-import { UserRole } from './models/auth.interface';
+import {Routes} from '@angular/router';
+import {MainLayout} from './layout/main-layout/main-layout';
+import {AuthGuard} from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,14 +10,15 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    // canActivate: [AuthGuard],
-    // canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
       },
+
       {
         path: 'dashboard',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
@@ -34,7 +34,6 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadChildren: () => import('./features/reports/reports.module').then(m => m.ReportsModule),
-        // canActivate: [AuthGuard],
         // data: { roles: [UserRole.ADMIN, UserRole.MANAGER] }
       },
       {
@@ -44,14 +43,13 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule),
-        // canActivate: [AuthGuard],
-        // data: { roles: [UserRole.ADMIN] }
+        //
+
       }
     ]
   },
-
   {
     path: '**',
-    redirectTo: '/dashboard'
+    redirectTo: 'dashboard'
   }
 ];

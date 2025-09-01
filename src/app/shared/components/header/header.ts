@@ -8,10 +8,11 @@ import {
   MatToolbarModule
 } from '../../material.module';
 import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../../core/services/auth.service';
+import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -36,6 +37,7 @@ export class Header {
   toggleSidebar(): void {
     this.sidebarToggle.emit();
   }
+
 
   logout(): void {
     this.authService.logout().subscribe({
