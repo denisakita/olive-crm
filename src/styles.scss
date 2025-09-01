@@ -201,3 +201,27 @@ body {
   background: var(--dark-moss-green);
 }
 
+/* Fix for CDK overlay issues */
+.cdk-overlay-container {
+  z-index: 1050 !important;
+  pointer-events: none;
+}
+
+.cdk-overlay-backdrop {
+  pointer-events: auto;
+}
+
+.cdk-overlay-pane {
+  pointer-events: auto;
+}
+
+/* Ensure profile content is visible */
+.profile-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix stuck overlays */
+.cdk-overlay-container:empty {
+  display: none !important;
+}

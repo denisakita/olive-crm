@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>
   <mat-icon>add_shopping_cart</mat-icon>
-  Add New Sale
+  {{ data?.sale ? 'Edit Sale' : 'Add New Sale' }}
 </h2>
 
 <mat-dialog-content>
-  <div class="dialog-form">
+  <div class="dialog-form" [style.opacity]="loading ? '0.5' : '1'">
     <div class="form-section">
       <h3>Customer Information</h3>
       <div class="form-row">
@@ -117,7 +117,7 @@
     <div class="total-section">
       <div class="total-display">
         <span class="total-label">Total Amount:</span>
-        <span class="total-value">${{sale.total?.toFixed(2) || '0.00'}}</span>
+        <span class="total-value">${{(sale.total || 0).toFixed(2)}}</span>
       </div>
     </div>
   </div>
@@ -125,8 +125,8 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isFormValid()">
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isFormValid() || loading">
     <mat-icon>save</mat-icon>
-    Save Sale
+    {{ data?.sale ? 'Update Sale' : 'Save Sale' }}
   </button>
 </mat-dialog-actions>

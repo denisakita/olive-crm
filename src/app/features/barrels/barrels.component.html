@@ -2,17 +2,27 @@
   <div class="barrels-header">
     <div>
       <h1>Barrel Management</h1>
+      <p class="subtitle">Manage your olive oil barrel inventory</p>
     </div>
-    <button mat-fab color="primary" class="add-barrel-btn">
-      <mat-icon>add</mat-icon>
-    </button>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="addBarrel()">
+        <mat-icon>add</mat-icon>
+        Add Barrel
+      </button>
+    </div>
   </div>
 
-  <div class="barrels-stats">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="barrels-stats" *ngIf="statistics">
     <mat-card class="stat-card">
       <mat-icon color="primary">storage</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">{{ barrels.length }}</span>
+        <span class="stat-value">{{ statistics.total_barrels }}</span>
         <span class="stat-label">Total Barrels</span>
       </div>
     </mat-card>
@@ -20,97 +30,110 @@
     <mat-card class="stat-card">
       <mat-icon color="accent">local_drink</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">{{ getTotalLiters() }}L</span>
-        <span class="stat-label">Total Volume</span>
+        <span class="stat-value">{{ statistics.total_current_volume | number:'1.1-1' }}L</span>
+        <span class="stat-label">Current Volume</span>
       </div>
     </mat-card>
 
     <mat-card class="stat-card">
-      <mat-icon class="success-icon">check_circle</mat-icon>
+      <mat-icon color="primary">inventory</mat-icon>
       <div class="stat-info">
-        <span class="stat-value">{{ getFullBarrels() }}</span>
-        <span class="stat-label">Full Barrels</span>
-      </div>
-    </mat-card>
-
-    <mat-card class="stat-card">
-      <mat-icon color="accent">hourglass_bottom</mat-icon>
-      <div class="stat-info">
-        <span class="stat-value">{{ getPartialBarrels() }}</span>
-        <span class="stat-label">Partial</span>
-      </div>
-    </mat-card>
-
-    <mat-card class="stat-card">
-      <mat-icon color="warn">hourglass_empty</mat-icon>
-      <div class="stat-info">
-        <span class="stat-value">{{ getEmptyBarrels() }}</span>
-        <span class="stat-label">Empty</span>
+        <span class="stat-value">{{ statistics.total_capacity | number:'1.1-1' }}L</span>
+        <span class="stat-label">Total Capacity</span>
       </div>
     </mat-card>
   </div>
 
-  <div class="barrels-grid">
-    <mat-card *ngFor="let barrel of barrels" class="barrel-card">
-      <mat-card-header>
-        <mat-card-title>{{ barrel.id }}</mat-card-title>
-        <mat-card-subtitle>{{ barrel.type }} Barrel</mat-card-subtitle>
-        <mat-chip [color]="getStatusColor(barrel.status)" class="status-chip">
-          {{ barrel.status }}
-        </mat-chip>
-      </mat-card-header>
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <div class="filters-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Barrels</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilters()"
+               placeholder="Search by barrel number, location...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
 
-      <mat-card-content>
-        <div class="barrel-info">
-          <div class="info-row">
-            <mat-icon>local_drink</mat-icon>
-            <span>{{ barrel.product || 'Empty - No Product' }}</span>
-          </div>
+      <button mat-button color="warn" (click)="clearFilters()"
+              [disabled]="!searchTerm">
+        <mat-icon>clear</mat-icon>
+        Clear
+      </button>
 
-          <div class="info-row">
-            <mat-icon>location_on</mat-icon>
-            <span>{{ barrel.location }}</span>
-          </div>
+      <button mat-raised-button color="accent" (click)="exportBarrels()">
+        <mat-icon>download</mat-icon>
+        Export
+      </button>
+    </div>
+  </mat-card>
 
-          <div class="info-row">
-            <mat-icon>calendar_today</mat-icon>
-            <span>Added: {{ barrel.dateAdded | date:'MMM dd, yyyy' }}</span>
-          </div>
-        </div>
-
-        <div class="volume-stats">
-          <div class="volume-item">
-            <mat-icon>water_drop</mat-icon>
-            <div class="volume-detail">
-              <span class="volume-label">Current Volume</span>
-              <span class="volume-value">{{ barrel.currentVolume }} Liters</span>
+  <!-- Barrels Table -->
+  <mat-card class="barrels-table-card">
+    <div class="table-container" [class.loading]="loading">
+      <table mat-table [dataSource]="barrels" class="barrels-table">
+        <!-- Barrel Number Column -->
+        <ng-container matColumnDef="barrel_number">
+          <th mat-header-cell *matHeaderCellDef> Barrel #</th>
+          <td mat-cell *matCellDef="let barrel">
+            <div class="barrel-id">
+              <mat-icon>storage</mat-icon>
+              {{ barrel.barrel_number }}
             </div>
-          </div>
+          </td>
+        </ng-container>
 
-          <div class="volume-item">
-            <mat-icon>local_bar</mat-icon>
-            <div class="volume-detail">
-              <span class="volume-label">Bottle Coverage</span>
-              <span class="volume-value">{{ getBottlesFilled(barrel) }} / {{ getTotalBottleCapacity(barrel) }}
-                bottles</span>
+        <!-- Capacity Column -->
+        <ng-container matColumnDef="capacity">
+          <th mat-header-cell *matHeaderCellDef> Capacity</th>
+          <td mat-cell *matCellDef="let barrel">
+            {{ barrel.capacity | number:'1.1-1' }}L
+          </td>
+        </ng-container>
+
+        <!-- Current Volume Column -->
+        <ng-container matColumnDef="current_volume">
+          <th mat-header-cell *matHeaderCellDef> Current Volume</th>
+          <td mat-cell *matCellDef="let barrel">
+            {{ barrel.current_volume | number:'1.1-1' }}L
+          </td>
+        </ng-container>
+
+
+        <!-- Location Column -->
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef> Location</th>
+          <td mat-cell *matCellDef="let barrel">
+            <div class="location-info">
+              <mat-icon>place</mat-icon>
+              {{ barrel.location }}
             </div>
-          </div>
-        </div>
+          </td>
+        </ng-container>
 
-        <div class="capacity-section">
-          <div class="capacity-header">
-            <span>Fill Level</span>
-            <span>{{ barrel.currentVolume }}L / {{ barrel.capacity }}L</span>
-          </div>
-          <mat-progress-bar
-            mode="determinate"
-            [value]="getFillPercentage(barrel)"
-            [color]="barrel.status === 'Empty' ? 'warn' : barrel.status === 'Full' ? 'primary' : 'accent'">
-          </mat-progress-bar>
-          <span class="capacity-percentage">{{ getFillPercentage(barrel) | percent:'1.0-0' }} Full</span>
-        </div>
-      </mat-card-content>
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions</th>
+          <td mat-cell *matCellDef="let barrel">
+            <div class="action-buttons">
+              <button mat-icon-button class="edit-button" (click)="editBarrel(barrel)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="delete-button" (click)="deleteBarrel(barrel)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-    </mat-card>
-  </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!-- No Data Message -->
+      <div *ngIf="!loading && barrels.length === 0" class="no-data">
+        <mat-icon>storage</mat-icon>
+        <p>No barrels found</p>
+      </div>
+    </div>
+  </mat-card>
 </div>

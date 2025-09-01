@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, FormControl} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../auth.service';
 import { MATERIAL_COMMON_MODULES } from '../../shared/material.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -121,8 +121,8 @@ export class RegisterComponent implements OnInit {
       ...this.personalForm.value
     };
 
-    // Remove confirmPassword from the data sent to server
-    delete registerData.confirmPassword;
+    // Don't remove confirmPassword - backend needs it for validation
+    // delete registerData.confirmPassword;
 
     this.authService.register(registerData).subscribe({
       next: () => {

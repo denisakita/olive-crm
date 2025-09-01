@@ -1,130 +1,171 @@
-import {Component} from '@angular/core';
-import {DatePipe, NgFor, PercentPipe} from '@angular/common';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {DecimalPipe, NgIf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {MaterialModule} from '../../shared/material.module';
-
-export interface Barrel {
-  id: string;
-  type: string;
-  capacity: number;
-  currentVolume: number;
-  product: string;
-  dateAdded: Date;
-  status: 'Empty' | 'Partial' | 'Full';
-  location: string;
-  bottleCapacity?: number;
-}
+import {BarrelsService} from '../../shared/services/barrels.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Barrel, BarrelStatistics} from '../../shared/models/barrel.interface';
+import {AddBarrelDialogComponent} from './add-barrel-dialog/add-barrel-dialog.component';
 
 @Component({
   selector: 'app-barrels',
   standalone: true,
   imports: [
     MaterialModule,
-    DatePipe,
-    PercentPipe,
-    NgFor
+    FormsModule,
+    DecimalPipe,
+    NgIf
   ],
   templateUrl: './barrels.component.html',
   styleUrl: './barrels.component.scss'
 })
-export class BarrelsComponent {
-  barrels: Barrel[] = [
-    {
-      id: 'B2024-001',
-      type: 'Oak',
-      capacity: 225,
-      currentVolume: 200,
-      product: 'Extra Virgin Olive Oil',
-      dateAdded: new Date('2024-01-15'),
-      status: 'Partial',
-      location: 'Warehouse A',
-      bottleCapacity: 267
-    },
-    {
-      id: 'B2024-002',
-      type: 'Stainless Steel',
-      capacity: 500,
-      currentVolume: 450,
-      product: 'Premium Olive Oil',
-      dateAdded: new Date('2024-02-20'),
-      status: 'Partial',
-      location: 'Warehouse B',
-      bottleCapacity: 600
-    },
-    {
-      id: 'B2024-003',
-      type: 'Oak',
-      capacity: 225,
-      currentVolume: 225,
-      product: 'Organic Olive Oil',
-      dateAdded: new Date('2024-03-10'),
-      status: 'Full',
-      location: 'Warehouse A',
-      bottleCapacity: 300
-    },
-    {
-      id: 'B2024-004',
-      type: 'Ceramic',
-      capacity: 300,
-      currentVolume: 0,
-      product: '',
-      dateAdded: new Date('2024-03-15'),
-      status: 'Empty',
-      location: 'Warehouse C',
-      bottleCapacity: 400
-    },
-    {
-      id: 'B2024-006',
-      type: 'Oak',
-      capacity: 225,
-      currentVolume: 150,
-      product: 'Infused Olive Oil',
-      dateAdded: new Date('2024-03-25'),
-      status: 'Partial',
-      location: 'Warehouse B',
-      bottleCapacity: 200
+export class BarrelsComponent implements OnInit, OnDestroy {
+  barrels: Barrel[] = [];
+  statistics: BarrelStatistics | null = null;
+  loading = false;
+  searchTerm = '';
+  displayedColumns = ['barrel_number', 'capacity', 'current_volume', 'location', 'actions'];
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private barrelsService: BarrelsService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.loadBarrels();
+    this.loadStatistics();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadBarrels(): void {
+    this.loading = true;
+    const params: any = {};
+
+    if (this.searchTerm) {
+      params.search = this.searchTerm;
     }
-  ];
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'Full':
-        return 'primary';
-      case 'Partial':
-        return 'accent';
-      case 'Empty':
-        return 'warn';
-      default:
-        return '';
-    }
+    this.barrelsService.getBarrels(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.barrels = response.results;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading barrels:', error);
+          this.loading = false;
+          this.snackBar.open(
+            'Failed to load barrels. Please try again.',
+            'Close',
+            {duration: 3000, panelClass: ['error-snackbar']}
+          );
+        }
+      });
   }
 
-  getFillPercentage(barrel: Barrel): number {
-    return (barrel.currentVolume / barrel.capacity) * 100;
+  loadStatistics(): void {
+    this.barrelsService.getStatistics()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (stats) => {
+          this.statistics = stats;
+        },
+        error: (error) => {
+          console.error('Error loading statistics:', error);
+        }
+      });
   }
 
-  getBottlesFilled(barrel: Barrel): number {
-    // Calculate how many 750ml bottles can be filled from current volume
-    return Math.floor(barrel.currentVolume / 0.75);
+  applyFilters(): void {
+    this.loadBarrels();
   }
 
-  getTotalBottleCapacity(barrel: Barrel): number {
-    // Calculate total bottle capacity from full barrel
-    return Math.floor(barrel.capacity / 0.75);
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.loadBarrels();
   }
 
-  getTotalLiters(): number {
-    return this.barrels.reduce((sum, barrel) => sum + barrel.currentVolume, 0);
+  editBarrel(barrel: Barrel): void {
+    // TODO: Implement edit barrel dialog
+    this.snackBar.open(
+      'Edit barrel feature coming soon',
+      'Close',
+      {duration: 3000, panelClass: ['info-snackbar']}
+    );
   }
 
-  getFullBarrels(): number {
-    return this.barrels.filter(b => b.status === 'Full').length;
+
+  addBarrel(): void {
+    const dialogRef = this.dialog.open(AddBarrelDialogComponent, {
+      width: '600px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) {
+          this.createBarrel(result);
+        }
+      });
   }
 
-  getPartialBarrels(): number {
-    return this.barrels.filter(b => b.status === 'Partial').length;
+  private createBarrel(barrel: Partial<Barrel>): void {
+    this.loading = true;
+    this.barrelsService.createBarrel(barrel)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (newBarrel) => {
+          this.snackBar.open(
+            `Barrel ${newBarrel.barrel_number} created successfully`,
+            'Close',
+            {duration: 3000, panelClass: ['success-snackbar']}
+          );
+          this.loadBarrels();
+          this.loadStatistics();
+        },
+        error: (error) => {
+          console.error('Error creating barrel:', error);
+          this.loading = false;
+          let errorMessage = 'Failed to create barrel. Please try again.';
+
+          if (error.error?.barrel_number) {
+            errorMessage = error.error.barrel_number[0];
+          } else if (error.error?.non_field_errors) {
+            errorMessage = error.error.non_field_errors[0];
+          }
+
+          this.snackBar.open(
+            errorMessage,
+            'Close',
+            {duration: 5000, panelClass: ['error-snackbar']}
+          );
+        }
+      });
   }
 
-  getEmptyBarrels(): number {
-    return this.barrels.filter(b => b.status === 'Empty').length;
+  exportBarrels(): void {
+    // TODO: Implement export functionality
+    this.snackBar.open(
+      'Export feature coming soon',
+      'Close',
+      {duration: 3000, panelClass: ['info-snackbar']}
+    );
+  }
+
+  deleteBarrel(barrel: any) {
+
   }
 }
