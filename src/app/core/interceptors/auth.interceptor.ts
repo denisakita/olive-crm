@@ -1,15 +1,26 @@
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, filter, switchMap, take} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -25,9 +36,6 @@ export class AuthInterceptor implements HttpInterceptor {
         request = this.addToken(request, token);
       }
     }
-
-    // Don't add CORS headers - let the server handle CORS
-    // The browser and server will manage CORS properly
 
     return next.handle(request).pipe(
       catchError(error => {
@@ -61,16 +69,25 @@ export class AuthInterceptor implements HttpInterceptor {
 
       if (refreshToken) {
         return this.refreshAccessToken(refreshToken).pipe(
-          switchMap((token: any) => {
+          switchMap((response: any) => {
             this.isRefreshing = false;
-            this.refreshTokenSubject.next(token.access_token);
+            const newToken = response.access;
+            this.refreshTokenSubject.next(newToken);
+
             // Store in the same storage where refresh token was found
             if (localStorage.getItem('refresh_token')) {
-              localStorage.setItem('access_token', token.access_token);
+              localStorage.setItem('access_token', newToken);
+              if (response.refresh) {
+                localStorage.setItem('refresh_token', response.refresh);
+              }
             } else {
-              sessionStorage.setItem('access_token', token.access_token);
+              sessionStorage.setItem('access_token', newToken);
+              if (response.refresh) {
+                sessionStorage.setItem('refresh_token', response.refresh);
+              }
             }
-            return next.handle(this.addToken(request, token.access_token));
+
+            return next.handle(this.addToken(request, newToken));
           }),
           catchError((err) => {
             this.isRefreshing = false;
@@ -94,19 +111,20 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private refreshAccessToken(refreshToken: string): Observable<any> {
-    // This should call your auth service to refresh the token
-    // For now, returning a mock observable
-    return new Observable(observer => {
-      // Simulate API call
-      setTimeout(() => {
-        observer.error('Token refresh not implemented');
-      }, 1000);
-    });
+    const url = `${environment.apiUrl}${environment.endpoints.auth.refresh}`;
+    return this.http.post(url, { refresh: refreshToken });
   }
 
   private logout(): void {
+    // Clear all auth data
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    this.router.navigate(['/login']);
+    localStorage.removeItem('current_user');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('current_user');
+
+    // Navigate to correct auth route
+    this.router.navigate(['/auth/login']);
   }
 }

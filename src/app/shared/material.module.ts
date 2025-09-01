@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 // Material Form Controls
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -48,6 +49,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 
 const MaterialComponents = [
+  OverlayModule,
   MatAutocompleteModule,
   MatCheckboxModule,
   MatDatepickerModule,
@@ -94,6 +96,7 @@ export class MaterialModule { }
 
 // For standalone components, export all modules individually
 export {
+  OverlayModule,
   MatAutocompleteModule,
   MatCheckboxModule,
   MatDatepickerModule,

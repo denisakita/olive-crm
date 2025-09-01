@@ -2,8 +2,6 @@
   <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
     <mat-nav-list>
       <div class="sidebar-header">
-        <mat-icon class="logo-icon">eco</mat-icon>
-        <h2 class="sidebar-title">Olive CRM</h2>
       </div>
 
       <mat-divider></mat-divider>
@@ -26,6 +24,11 @@
       <a mat-list-item routerLink="/reports" routerLinkActive="active-link" class="nav-item">
         <mat-icon>assessment</mat-icon>
         <span>Reports</span>
+      </a>
+
+      <a mat-list-item routerLink="/profile" routerLinkActive="active-link" class="nav-item">
+        <mat-icon>account_circle</mat-icon>
+        <span>Profile</span>
       </a>
 
       <mat-divider></mat-divider>
@@ -51,10 +54,6 @@
 
       <h3 class="section-header">Settings</h3>
 
-      <a mat-list-item routerLink="/profile" routerLinkActive="active-link" class="nav-item">
-        <mat-icon>account_circle</mat-icon>
-        <span>Profile</span>
-      </a>
 
       <a mat-list-item routerLink="/settings" routerLinkActive="active-link" class="nav-item">
         <mat-icon>settings</mat-icon>

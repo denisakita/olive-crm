@@ -11,13 +11,11 @@ import {
   LoginRequest,
   LoginResponse,
   PasswordResetConfirm,
-  PasswordResetRequest,
   RegisterRequest,
   RegisterResponse,
   TokenRefreshResponse,
   User
 } from '../shared/models/auth.interface';
-import { Profile } from '../shared/models/profile.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -222,11 +220,35 @@ export class AuthService {
   }
 
   /**
-   * Request password reset
+   * Request password reset - sends reset email
    */
-  requestPasswordReset(data: PasswordResetRequest): Observable<any> {
-    const url = `${environment.apiUrl}/auth/password-reset/`;
-    return this.http.post(url, data);
+  requestPasswordReset(email: string): Observable<any> {
+    const url = `${environment.apiUrl}${environment.endpoints.auth.passwordReset}`;
+    return this.http.post(url, {email}).pipe(
+      catchError(error => {
+        console.error('Password reset request error:', error);
+        // Always return success for security reasons
+        return of({message: 'If the email exists, a password reset link has been sent.'});
+      })
+    );
+  }
+
+  /**
+   * Reset password with token
+   */
+  resetPassword(token: string, uid: string, password: string): Observable<any> {
+    const url = `${environment.apiUrl}${environment.endpoints.auth.passwordResetConfirm}`;
+    return this.http.post(url, {
+      token,
+      uid,
+      password: password,
+      confirmPassword: password
+    }).pipe(
+      catchError(error => {
+        console.error('Password reset error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -241,7 +263,7 @@ export class AuthService {
    * Change password
    */
   changePassword(data: ChangePasswordRequest): Observable<any> {
-    const url = `${environment.apiUrl}/auth/change-password/`;
+    const url = `${environment.apiUrl}${environment.endpoints.auth.changePassword}`;
     return this.http.post(url, data);
   }
 
@@ -385,19 +407,6 @@ export class AuthService {
     });
   }
 
-  /**
-   * Get current token from state or storage
-   */
-  getToken(): string | null {
-    // First check the current state
-    const stateToken = this.authStateSubject.value.token;
-    if (stateToken) {
-      return stateToken;
-    }
-
-    // Otherwise check storages (localStorage first for persistent, then sessionStorage)
-    return localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
-  }
 
   /**
    * Get current user

@@ -6,6 +6,7 @@ const routes: Routes = [
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+
   },
   {
     path: 'login',
@@ -17,11 +18,15 @@ const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    loadComponent: () => import('./login/login.component').then(c => c.LoginComponent)
+    loadComponent: () => import('./forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)
   },
   {
     path: 'reset-password',
-    loadComponent: () => import('./login/login.component').then(c => c.LoginComponent)
+    loadComponent: () => import('./reset-password/reset-password.component').then(c => c.ResetPasswordComponent)
+  },
+  {
+    path: 'change-password',
+    loadComponent: () => import('./change-password/change-password.component').then(c => c.ChangePasswordComponent)
   },
   {
     path: 'unauthorized',

@@ -12,6 +12,7 @@ import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -36,6 +37,7 @@ export class Header {
   toggleSidebar(): void {
     this.sidebarToggle.emit();
   }
+
 
   logout(): void {
     this.authService.logout().subscribe({

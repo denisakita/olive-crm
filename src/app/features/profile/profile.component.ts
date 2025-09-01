@@ -1,12 +1,14 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {DatePipe, NgIf} from '@angular/common';
 import {MaterialModule} from '../../shared/material.module';
 import {AuthService} from '../../auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Profile} from '../../shared/models/profile.interface';
+import {ChangePasswordDialogComponent} from './change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -29,8 +31,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadProfile();
@@ -50,18 +54,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
           // Store the profile data
           if (user) {
             this.user = user as Profile;
-            this.originalUser = { ...user } as Profile;
+            this.originalUser = {...user} as Profile;
           }
           this.loading = false;
         },
         error: (error) => {
           console.error('Error loading profile:', error);
           this.loading = false;
-          this.snackBar.open(
-            'Failed to load profile. Please try again.',
-            'Close',
-            { duration: 3000, panelClass: ['error-snackbar'] }
-          );
+          // Don't show error snackbar for now to avoid confusion
+          // this.snackBar.open(
+          //   'Failed to load profile. Please try again.',
+          //   'Close',
+          //   {duration: 3000, panelClass: ['error-snackbar']}
+          // );
         }
       });
   }
@@ -69,7 +74,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   toggleEdit(): void {
     if (this.isEditing) {
       // If canceling edit, restore original values
-      this.user = { ...this.originalUser! };
+      this.user = {...this.originalUser!};
     }
     this.isEditing = !this.isEditing;
   }
@@ -78,7 +83,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (!this.user) return;
 
     // Prepare the data for backend
-    const profileData: any = { ...this.user };
+    const profileData: any = {...this.user};
 
     this.loading = true;
     this.authService.updateProfile(profileData)
@@ -88,14 +93,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
           // Store the updated profile data
           if (updatedUser) {
             this.user = updatedUser as Profile;
-            this.originalUser = { ...updatedUser } as Profile;
+            this.originalUser = {...updatedUser} as Profile;
           }
           this.isEditing = false;
           this.loading = false;
           this.snackBar.open(
             'Profile updated successfully',
             'Close',
-            { duration: 3000, panelClass: ['success-snackbar'] }
+            {duration: 3000, panelClass: ['success-snackbar']}
           );
         },
         error: (error) => {
@@ -104,7 +109,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.snackBar.open(
             'Failed to update profile. Please try again.',
             'Close',
-            { duration: 3000, panelClass: ['error-snackbar'] }
+            {duration: 3000, panelClass: ['error-snackbar']}
           );
         }
       });
@@ -113,18 +118,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
   cancelEdit(): void {
     // Restore original values
     if (this.originalUser) {
-      this.user = { ...this.originalUser };
+      this.user = {...this.originalUser};
     }
     this.isEditing = false;
   }
 
   changePassword(): void {
-    // TODO: Implement password change dialog
-    this.snackBar.open(
-      'Password change feature coming soon',
-      'Close',
-      { duration: 3000, panelClass: ['info-snackbar'] }
-    );
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '500px',
+      disableClose: false,
+      autoFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.snackBar.open(
+          'Your password has been changed successfully',
+          'Close',
+          {duration: 3000, panelClass: ['success-snackbar']}
+        );
+      }
+    });
   }
 
   uploadAvatar(): void {
@@ -132,7 +146,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.snackBar.open(
       'Avatar upload feature coming soon',
       'Close',
-      { duration: 3000, panelClass: ['info-snackbar'] }
+      {duration: 3000, panelClass: ['info-snackbar']}
     );
   }
 }

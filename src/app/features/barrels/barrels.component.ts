@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DecimalPipe, NgClass, NgIf, PercentPipe, TitleCasePipe} from '@angular/common';
+import {DecimalPipe, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MaterialModule} from '../../shared/material.module';
 import {BarrelsService} from '../../shared/services/barrels.service';
@@ -16,11 +16,8 @@ import {AddBarrelDialogComponent} from './add-barrel-dialog/add-barrel-dialog.co
   imports: [
     MaterialModule,
     FormsModule,
-    PercentPipe,
     DecimalPipe,
-    TitleCasePipe,
-    NgIf,
-    NgClass
+    NgIf
   ],
   templateUrl: './barrels.component.html',
   styleUrl: './barrels.component.scss'
@@ -169,6 +166,6 @@ export class BarrelsComponent implements OnInit, OnDestroy {
   }
 
   deleteBarrel(barrel: any) {
-    
+
   }
 }

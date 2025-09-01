@@ -7,6 +7,7 @@ import {MATERIAL_COMMON_MODULES, MATERIAL_FORM_MODULES} from '../../shared/mater
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -40,8 +41,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
 
-    // Check if already authenticated
-    this.authService.isAuthenticated$.subscribe(isAuthenticated => {
+    // Check if already authenticated - only check once on component init
+    this.authService.isAuthenticated$.pipe(
+      take(1)
+    ).subscribe(isAuthenticated => {
       if (isAuthenticated) {
         this.navigateToReturnUrl();
       }

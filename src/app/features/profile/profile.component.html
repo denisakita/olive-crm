@@ -159,6 +159,22 @@
             <h3 class="section-title">About Me</h3>
             <p>{{ user.bio || 'No bio provided.' }}</p>
           </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="security-section">
+            <h3 class="section-title">Security</h3>
+            <div class="security-actions">
+              <button mat-stroked-button color="primary" (click)="changePassword()">
+                <mat-icon>lock</mat-icon>
+                Change Password
+              </button>
+              <p class="security-info">
+                <mat-icon>info</mat-icon>
+                Keep your account secure by changing your password regularly
+              </p>
+            </div>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
